@@ -1,0 +1,27 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.tatsui.animecheck"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.tatsui.animecheck"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.tatsui.animecheck"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.tatsui.animecheck"
+        },
+        "cordova-plugin-keyboard": {
+            "PACKAGE_NAME": "com.tatsui.animecheck"
+        }
+    },
+    "dependent_plugins": {}
+}

@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{8D6F346B-6EF5-4B5A-84D0-C1969B5A2CDC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>ConsoleApplication</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Anime_Check</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="index.html" />
+    <Content Include="lib\angular-ui-router\angular-ui-router.js" />
+    <Content Include="lib\angular-ui-router\angular-ui-router.min.js" />
+    <Content Include="lib\angular\angular-csp.css" />
+    <Content Include="lib\angular\angular.js" />
+    <Content Include="lib\angular\angular.min.js" />
+    <Content Include="lib\angular\index.js" />
+    <Content Include="lib\fastclick\fastclick.js" />
+    <Content Include="lib\hammer\hammer.min.js" />
+    <Content Include="lib\loading-spinner\loading-spinner.css" />
+    <Content Include="lib\loading-spinner\loading-spinner.js" />
+    <Content Include="lib\slide-tabs-la\slide-tabs-la.css" />
+    <Content Include="lib\slide-tabs-la\slide-tabs-la.js" />
+    <Content Include="lib\touch-menu-la\touch-menu-la.css" />
+    <Content Include="lib\touch-menu-la\touch-menu-la.js" />
+    <Content Include="src\fonts\material\MaterialIcons-Regular.ijmap.txt" />
+    <Content Include="src\fonts\robotodraft\Black\RobotoDraft-Black.svg" />
+    <Content Include="src\fonts\robotodraft\BoldItalic\RobotoDraft-BoldItalic.svg" />
+    <Content Include="src\fonts\robotodraft\Bold\RobotoDraft-Bold.svg" />
+    <Content Include="src\fonts\robotodraft\Italic\RobotoDraft-Italic.svg" />
+    <Content Include="src\fonts\robotodraft\Light\RobotoDraft-Light.svg" />
+    <Content Include="src\fonts\robotodraft\Medium\RobotoDraft-Medium.svg" />
+    <Content Include="src\fonts\robotodraft\Regular\RobotoDraft-Regular.svg" />
+    <Content Include="src\fonts\robotodraft\Thin\RobotoDraft-Thin.svg" />
+    <Content Include="src\js\initialize.js" />
+    <Content Include="src\js\main.js" />
+    <Content Include="src\js\material-design.js" />
+    <Content Include="src\js\models.js" />
+    <Content Include="src\js\tools.js" />
+    <Content Include="src\style\css\main.css" />
+    <Content Include="src\style\less\main.css">
+      <DependentUpon>main.less</DependentUpon>
+    </Content>
+    <Content Include="src\style\less\main.min.css">
+      <DependentUpon>main.css</DependentUpon>
+    </Content>
+    <Content Include="view\category.html" />
+    <Content Include="view\home.html" />
+    <Content Include="view\search.html" />
+    <Content Include="view\serie.html" />
+    <Content Include="view\series.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\angular\.bower.json" />
+    <None Include="lib\angular\angular.min.js.gzip" />
+    <None Include="lib\angular\angular.min.js.map" />
+    <None Include="lib\angular\bower.json" />
+    <None Include="lib\angular\package.json" />
+    <None Include="lib\angular\README.md" />
+    <None Include="src\fonts\material\MaterialIcons-Regular.eot" />
+    <None Include="src\fonts\material\MaterialIcons-Regular.ttf" />
+    <None Include="src\fonts\material\MaterialIcons-Regular.woff" />
+    <None Include="src\fonts\material\MaterialIcons-Regular.woff2" />
+    <None Include="src\fonts\robotodraft\Black\RobotoDraft-Black.eot" />
+    <None Include="src\fonts\robotodraft\Black\RobotoDraft-Black.ttf" />
+    <None Include="src\fonts\robotodraft\Black\RobotoDraft-Black.woff" />
+    <None Include="src\fonts\robotodraft\Black\RobotoDraft-Black.woff2" />
+    <None Include="src\fonts\robotodraft\BoldItalic\RobotoDraft-BoldItalic.eot" />
+    <None Include="src\fonts\robotodraft\BoldItalic\RobotoDraft-BoldItalic.ttf" />
+    <None Include="src\fonts\robotodraft\BoldItalic\RobotoDraft-BoldItalic.woff" />
+    <None Include="src\fonts\robotodraft\BoldItalic\RobotoDraft-BoldItalic.woff2" />
+    <None Include="src\fonts\robotodraft\Bold\RobotoDraft-Bold.eot" />
+    <None Include="src\fonts\robotodraft\Bold\RobotoDraft-Bold.ttf" />
+    <None Include="src\fonts\robotodraft\Bold\RobotoDraft-Bold.woff" />
+    <None Include="src\fonts\robotodraft\Bold\RobotoDraft-Bold.woff2" />
+    <None Include="src\fonts\robotodraft\Italic\RobotoDraft-Italic.eot" />
+    <None Include="src\fonts\robotodraft\Italic\RobotoDraft-Italic.ttf" />
+    <None Include="src\fonts\robotodraft\Italic\RobotoDraft-Italic.woff" />
+    <None Include="src\fonts\robotodraft\Italic\RobotoDraft-Italic.woff2" />
+    <None Include="src\fonts\robotodraft\Light\RobotoDraft-Light.eot" />
+    <None Include="src\fonts\robotodraft\Light\RobotoDraft-Light.ttf" />
+    <None Include="src\fonts\robotodraft\Light\RobotoDraft-Light.woff" />
+    <None Include="src\fonts\robotodraft\Light\RobotoDraft-Light.woff2" />
+    <None Include="src\fonts\robotodraft\Medium\RobotoDraft-Medium.eot" />
+    <None Include="src\fonts\robotodraft\Medium\RobotoDraft-Medium.ttf" />
+    <None Include="src\fonts\robotodraft\Medium\RobotoDraft-Medium.woff" />
+    <None Include="src\fonts\robotodraft\Medium\RobotoDraft-Medium.woff2" />
+    <None Include="src\fonts\robotodraft\Regular\RobotoDraft-Regular.eot" />
+    <None Include="src\fonts\robotodraft\Regular\RobotoDraft-Regular.ttf" />
+    <None Include="src\fonts\robotodraft\Regular\RobotoDraft-Regular.woff" />
+    <None Include="src\fonts\robotodraft\Regular\RobotoDraft-Regular.woff2" />
+    <None Include="src\fonts\robotodraft\Thin\RobotoDraft-Thin.eot" />
+    <None Include="src\fonts\robotodraft\Thin\RobotoDraft-Thin.ttf" />
+    <None Include="src\fonts\robotodraft\Thin\RobotoDraft-Thin.woff" />
+    <None Include="src\fonts\robotodraft\Thin\RobotoDraft-Thin.woff2" />
+    <None Include="src\style\less\fonts.less" />
+    <None Include="src\style\less\main.css.map">
+      <DependentUpon>main.css</DependentUpon>
+    </None>
+    <None Include="src\style\less\main.less" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>

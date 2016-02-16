@@ -1,0 +1,11 @@
+$ cat .gitignore
+
+www/*.csproj
+www/*.user
+www/*.vspscc
+www/*.sln
+www/*.vssscc
+www/*.suo
+www/$tf
+www/bin
+www/obj

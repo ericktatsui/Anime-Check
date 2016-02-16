@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="AnimeCheck">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <title>Anime Check</title>
+    <script src="cordova.js"></script>
+    <link rel="stylesheet" href="src/style/css/main.css">
+    <link rel="stylesheet" href="lib/touch-menu-la/touch-menu-la.css">
+    <link rel="stylesheet" href="lib/slide-tabs-la/slide-tabs-la.css">
+    <link rel="stylesheet" href="lib/loading-spinner/loading-spinner.css">
+</head>
+<body>
+    <div id="view-index" ui-view></div>
+
+    <div id="menu">
+        <ul class="menu-items">
+            <li>
+                <i class="material-icons">star_rate</i>Favoritos
+            </li>
+            <li>
+                <i class="material-icons">list</i>Listas
+            </li>
+            <li class="space"></li>
+            <li>hue</li>
+            <li>hue</li>
+            <li class="line"></li>
+            <li>hue</li>
+        </ul>
+    </div>
+    
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 200 200" id="spinner-content">
+        <circle cx="100" cy="100" r="50" id="circle"></circle>
+    </svg>
+
+    <!-- Fastclick -->
+    <script src="lib/fastclick/fastclick.js"></script>
+
+    <!-- Angular -->
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-ui-router/angular-ui-router.min.js"></script>
+    
+    <!-- Hammer -->
+    <script src="lib/hammer/hammer.min.js"></script>
+    
+    <!-- Touch Menu Like Android -->
+    <script src="lib/touch-menu-la/touch-menu-la.js"></script>
+
+    <!-- Slide Tabs Like Android -->
+    <script src="lib/slide-tabs-la/slide-tabs-la.js"></script>
+    
+    <script>
+        AC = {};
+    </script>
+    
+    <script src="src/js/models.js"></script>
+
+    <script src="src/js/initialize.js"></script>
+    
+    <!-- Loading Spinner -->
+    <script src="lib/loading-spinner/loading-spinner.js"></script>
+    
+    <script src="src/js/tools.js"></script>
+    
+    <script src="src/js/material-design.js"></script>
+
+    <script src="src/js/main.js"></script>
+</body>
+</html>

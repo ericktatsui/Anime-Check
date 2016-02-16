@@ -1,0 +1,8 @@
+<div class="series-container">
+    <div ng-click="openAnime(serie.id)" ng-repeat="serie in list" class="serie" style="background-image: url({{serie.image_url_lge}}); height: {{cardHeight}}px">
+        <a href="#/serie" class="full-link"></a>
+        <div class="infos">
+            <span class="name">{{ cutName(serie.title_romaji) }}</span>
+        </div>
+    </div>
+</div>
