@@ -1,5 +1,8 @@
 $ cat .gitignore
 
+Properties
+plugins
+platforms
 www/*.csproj
 www/*.user
 www/*.vspscc
@@ -9,3 +12,6 @@ www/*.suo
 www/$tf
 www/bin
 www/obj
+*.php
+*.xml
+*.json
