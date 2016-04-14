@@ -5,7 +5,7 @@
     <a ui-sref="search" class="material-icons icon-btn right">search</a>
 </div>
 
-<div id="tabs">
+<div id="tabs" class="ttla-tabs">
     <ul>
         <li class="btn-wave">
             <a href="#tab1">Animes</a>
@@ -19,8 +19,10 @@
     </ul>
 </div>
 
-<div id="content" class="content scroll">
-    <div id="tab1" class="tab-content" ui-view="animes"></div>
-    <div id="tab2" class="tab-content" ui-view="mangas"></div>
-    <div id="tab3" class="tab-content" ui-view="filmes"></div>
+<div id="ttla-container" class="ttla-container">
+    <div id="ttla-content" class="ttla-content content scroll">
+        <div id="tab1" class="tab-content" ui-view="animes"></div>
+        <div id="tab2" class="tab-content" ui-view="mangas"></div>
+        <div id="tab3" class="tab-content" ui-view="filmes"></div>
+    </div>
 </div>

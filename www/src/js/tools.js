@@ -1,5 +1,6 @@
-﻿(function() {
+﻿(function () {
     var Tools = function () {
+        var self;
 
         var constructor = function () {
             self = this;
@@ -45,6 +46,16 @@
             }
 
             return colorRtn;
+        };
+
+        constructor.prototype.translateList = function (list, toTranslate) {
+            var translated = [];
+
+            for (var i = toTranslate.length; i--;) {
+                translated.push(list[toTranslate[i].toLowerCase().replace(/( )/g, '_')]);
+            }
+
+            return translated;
         };
 
         return new constructor();

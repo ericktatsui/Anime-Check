@@ -11,6 +11,7 @@ body {
     font-family: RobotoDraft;
     background: #061E2D;
     color: #FFF;
+    font-weight: 300;
 }
 
 * {
@@ -283,7 +284,7 @@ h2 {
     }
 
     .title {
-        font-size: 20px;
+        font-size: 18px;
         line-height: 56px;
         float: left;
         margin-left: 5px;
@@ -449,7 +450,8 @@ h2 {
 }
 
 #view-index {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: fixed;
     width: 100%;
     height: 100%;
@@ -493,6 +495,7 @@ h2 {
     .title-rm {
         font-size: 22px;
         color: #061E2D;
+        font-weight: 400;
     }
 
     .title-jp {
@@ -586,7 +589,7 @@ ul.menu-items {
     padding: 16px 0;
     box-sizing: border-box;
 
-    span {
+    span.label {
         font-size: 14px;
         display: block;
     }
@@ -658,5 +661,94 @@ ul.menu-items {
 
     &.outline {
         background: #FFF;
+    }
+}
+
+.list-infos {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 15px 0;
+
+        .key {
+            font-weight: 400;
+        }
+
+        .value {
+            float: right;
+        }
+
+        .list {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+
+            .tags {
+                background: #19C4D8;
+                padding: 3px 5px;
+                border-radius: 2px;
+                font-size: 13px;
+                color: #061E2D;
+                font-weight: 400;
+                margin: 2px;
+                display: inline-box;
+                display: -webkit-inline-box;
+            }
+        }
+
+        .small-link {
+            color: #445661;
+            font-size: 14px;
+            display: block;
+        }
+    }
+}
+
+.number-picker {
+    width: 200px;
+
+    &.--center {
+        margin: 0 auto;
+    }
+
+    input {
+        font-size: 32px;
+        font-weight: 300;
+        font-family: RobotoDraft;
+        width: 80px;
+        height: 60px;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+        border: 1px solid rgba(6, 30, 45, 0.15);
+        border-left: 0;
+        border-right: 0;
+    }
+
+    button {
+        height: 62px;
+        width: 60px;
+        padding: 0;
+        font-size: 32px;
+        font-weight: 300;
+        font-family: RobotoDraft;
+        background-color: #FFF;
+        color: #061E2D;
+        border: 1px solid rgba(6, 30, 45, 0.15);
+
+        &.--left {
+            margin: 0 -4px 0 0;
+            border-right: 0;
+            border-radius: 4px 0 0 4px;
+        }
+
+        &.--right {
+            margin: 0 0 0 -4px;
+            border-left: 0;
+            border-radius: 0 4px 4px 0;
+        }
     }
 }

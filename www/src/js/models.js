@@ -21,5 +21,72 @@
         blueGrey: '#607D8B',
         black: '#000000',
         white: '#FFFFFF'
+    },
+    translation: {
+        season: {
+            'winter': 'Inverno',
+            'spring': 'Primavera',
+            'summer': 'Verão',
+            'fall': 'Outono'
+        },
+        type: {
+            'tv': 'Série',
+            'movie': 'Filme',
+            'special': 'Especial',
+            'ova': 'OVA',
+            'ona': 'ONA',
+            'tv short': 'Série Curta'
+        },
+        status: {
+            'not yet aired': 'Ainda não exibido',
+            'currently airing': 'Sendo exibido',
+            'finished airing': 'Finalizado',
+            'cancelled': 'Cancelado'
+        },
+        genres: {
+            'action': 'Ação',
+            'adventure': 'Aventura',
+            'cars': 'Carros',
+            'comedy': 'Comédia',
+            'dementia': 'Demência',
+            'demons': 'Yokais',
+            'drama': 'Drama',
+            'ecchi': 'Ecchi',
+            'fantasy': 'Fantasia',
+            'game': 'Jogos',
+            'harem': 'Harem',
+            'hentai': 'Hentai',
+            'historical': 'Histórico',
+            'horror': 'Terror',
+            'josei': 'Josei',
+            'kids': 'Crianças',
+            'magic': 'Magia',
+            'martial_arts': 'Artes Marciais',
+            'mecha': 'Mecha',
+            'military': 'Militares',
+            'music': 'Música',
+            'mystery': '´Mistério',
+            'parody': 'Paródia',
+            'police': 'Polícia',
+            'psychological': 'Psicológico',
+            'romance': 'Romance',
+            'samurai': 'Samurai',
+            'school': 'Vida Escolar',
+            'sci-fi': 'Sci-Fi',
+            'seinen': 'Seinen',
+            'shoujo': 'Shoujo',
+            'shoujo_ai': 'Shoujo Ai',
+            'shounen': 'Shounen',
+            'shounen_ai': 'Shounen Ai',
+            'slice_of_life': 'Slice of Life',
+            'space': 'Espaço',
+            'sports': 'Esporte',
+            'super_power': 'Super Poderes',
+            'supernatural': 'Sobrenatural',
+            'thriller': 'Suspense',
+            'vampire': 'Vampiros',
+            'yaoi': 'Yaoi',
+            'yuri': 'yuri'
+        }
     }
 };

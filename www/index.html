@@ -8,14 +8,14 @@
     <title>Anime Check</title>
     <script src="cordova.js"></script>
     <link rel="stylesheet" href="src/style/css/main.css">
-    <link rel="stylesheet" href="lib/touch-menu-la/touch-menu-la.css">
-    <link rel="stylesheet" href="lib/slide-tabs-la/slide-tabs-la.css">
+    <link rel="stylesheet" href="lib/touch-menu-la/css/touch-menu-la.min.css">
+    <link rel="stylesheet" href="lib/touch-tabs-la/css/touch-tabs-la.min.css">
     <link rel="stylesheet" href="lib/loading-spinner/loading-spinner.css">
 </head>
 <body>
     <div id="view-index" ui-view></div>
 
-    <div id="menu">
+    <div id="menu" class="touch-menu-la tmla-menu">
         <ul class="menu-items">
             <li>
                 <i class="material-icons">star_rate</i>Favoritos
@@ -46,10 +46,12 @@
     <script src="lib/hammer/hammer.min.js"></script>
     
     <!-- Touch Menu Like Android -->
-    <script src="lib/touch-menu-la/touch-menu-la.js"></script>
+    <script src="lib/touch-menu-la/js/touch-menu-la.min.js"></script>
 
     <!-- Slide Tabs Like Android -->
-    <script src="lib/slide-tabs-la/slide-tabs-la.js"></script>
+    <script src="lib/touch-tabs-la/js/touch-tabs-la.js"></script>
+    
+    <script src="lib/moment/moment.min.js"></script>
     
     <script>
         AC = {};
@@ -58,6 +60,8 @@
     <script src="src/js/models.js"></script>
 
     <script src="src/js/initialize.js"></script>
+    
+    <script src="src/js/dataBase.js"></script>
     
     <!-- Loading Spinner -->
     <script src="lib/loading-spinner/loading-spinner.js"></script>

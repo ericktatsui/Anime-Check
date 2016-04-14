@@ -57,15 +57,15 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 	        },
 	        'animes@home': {
 	            templateUrl: 'view/series.html',
-	            controller: 'TabAnimesCtrl'
+	            controller: 'HomeTabAnimesCtrl'
 	        },
 	        'mangas@home': {
 	            templateUrl: 'view/series.html',
-	            controller: 'TabMangasCtrl'
+	            controller: 'HomeTabMangasCtrl'
 	        },
 	        'filmes@home': {
 	            templateUrl: 'view/series.html',
-	            controller: 'TabMoviesCtrl'
+	            controller: 'HomeTabMoviesCtrl'
 	        }
 	    }
 	})
@@ -98,8 +98,13 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 	            templateUrl: 'view/search.html',
 	            controller: 'SearchCtrl',
 	        },
-	        'search-content@search': {
-	            templateUrl: 'view/series.html'
+	        'anime-search@search': {
+	            templateUrl: 'view/series.html',
+	            controller: 'SearchTabAnimesCtrl'
+	        },
+	        'manga-search@search': {
+	            templateUrl: 'view/series.html',
+	            controller: 'SearchTabMangasCtrl'
 	        }
 	    }
 	});
@@ -162,12 +167,6 @@ app.service('$acApi', function ($rootScope, $acRequest) {
                 });
 
                 callback(data.access_token);
-
-                //$acRequest.get('https://anilist.co/api/browse/anime/?year=2016&type=tv&access_token=' + CONFIG.accessToken, function (data) {
-                //    console.log(data);
-                //}, function(data) {
-                //    console.error(data);
-                //});
             }, function (data) {
                 console.error(data);
             });
@@ -184,14 +183,27 @@ app.service('$acApi', function ($rootScope, $acRequest) {
         }
     };
 
-    this.fromId = function (type, id, callback) {
+    this.fromId = function (type, id, page, callback) {
         this.getToken(function (token) {
             var url;
 
             if (CONFIG.enableDebug) {
-                url = CONFIG.debugUrl + '?typeq=' + type + '&id=' + id;
+                if (page) {
+                    page = 'page';
+                } else {
+                    page = 'id';
+                }
+
+                // http://ericktatsui.com.br/anime-check/id/anime/139
+                url = CONFIG.debugUrl + page + '/' + type + '/' + id;
             } else {
-                url = CONFIG.apiUrl + type + '/' + id + '/?access_token=' + token;
+                if (page) {
+                    page = '/page';
+                } else {
+                    page = '';
+                }
+
+                url = CONFIG.apiUrl + type + '/' + id + page + '/?access_token=' + token;
             }
 
             $acRequest.get(
@@ -208,14 +220,15 @@ app.service('$acApi', function ($rootScope, $acRequest) {
         });
     };
 
-    this.search = function (query, callback) {
+    this.search = function (type, query, callback) {
         this.getToken(function (token) {
             var url = '';
 
             if (CONFIG.enableDebug) {
-                url = CONFIG.debugUrl + '?search=' + query;
+                // http://ericktatsui.com.br/anime-check/search/anime/hunter
+                url = CONFIG.debugUrl + 'search/' + type + '/' + query;
             } else {
-                url = CONFIG.apiUrl + 'anime/search/' + query + '/?access_token=' + token;
+                url = CONFIG.apiUrl + type + '/search/' + query + '/?access_token=' + token;
             }
 
             $acRequest.get(
@@ -242,7 +255,8 @@ app.service('$acApi', function ($rootScope, $acRequest) {
             }
 
             if (CONFIG.enableDebug) {
-                url = CONFIG.debugUrl + '?list' + paramns + '&typeq=' + query;
+                // http://ericktatsui.com.br/anime-check/list/anime/?year=2016
+                url = CONFIG.debugUrl + 'list/' + query + '/?' + paramns;
             } else {
                 url = CONFIG.apiUrl + 'browse/' + query + '/?' + paramns + '&access_token=' + token;
             }
@@ -273,13 +287,14 @@ app.controller('HomeCtrl', function ($scope, $state) {
             AC.loading.show();
         }
 
-        AC.SlideTabs = SlideTabsLA({
-            container: document.getElementById('content'),
-            target: document.getElementById('tabs'),
-            headerContainer: document.getElementById('header'),
+        AC.SlideTabs = TouchTabsLA({
+            container: document.getElementById('ttla-container'),
+            content: document.getElementById('ttla-content'),
+            tabs: document.getElementById('tabs'),
+            header: document.getElementById('header'),
             resize: true,
             onTabChange: function () {
-                //SSSconsole.log(this);
+                //console.log(this);
             }
         });
 
@@ -293,7 +308,7 @@ app.controller('HomeCtrl', function ($scope, $state) {
     };
 });
 
-app.controller('TabAnimesCtrl', function ($scope, $rootScope, $acApi) {
+app.controller('HomeTabAnimesCtrl', function ($scope, $rootScope, $acApi) {
     if (TEMP.animeList == null) {
         $acApi.list('anime',
         {
@@ -310,7 +325,7 @@ app.controller('TabAnimesCtrl', function ($scope, $rootScope, $acApi) {
     }
 });
 
-app.controller('TabMangasCtrl', function ($scope, $rootScope, $acApi) {
+app.controller('HomeTabMangasCtrl', function ($scope, $rootScope, $acApi) {
     document.getElementById('tab2').addEventListener('tabFocused', function (e) {
         AC.loading.show();
 
@@ -334,7 +349,7 @@ app.controller('TabMangasCtrl', function ($scope, $rootScope, $acApi) {
     });
 });
 
-app.controller('TabMoviesCtrl', function ($scope, $rootScope, $acApi) {
+app.controller('HomeTabMoviesCtrl', function ($scope, $rootScope, $acApi) {
     document.getElementById('tab3').addEventListener('tabFocused', function (e) {
         AC.loading.show();
 
@@ -370,7 +385,7 @@ app.controller('SearchCtrl', function ($scope, $rootScope, $acApi, $state) {
     var requestSearch = function () {
         AC.loading.show();
 
-        $acApi.search($scope.searchQuery, function (data) {
+        $acApi.search('anime', $scope.searchQuery, function (data) {
             $scope.list = data;
 
             AC.loading.hide();
@@ -385,6 +400,17 @@ app.controller('SearchCtrl', function ($scope, $rootScope, $acApi, $state) {
             searchClose = document.getElementById('searchClose'),
             searchButton = document.getElementById('searchButton'),
             searchBack = document.getElementById('searchBack');
+
+        AC.SlideTabs = TouchTabsLA({
+            container: document.getElementById('ttla-container'),
+            content: document.getElementById('ttla-content'),
+            tabs: document.getElementById('tabs'),
+            header: document.getElementById('header'),
+            resize: true,
+            onTabChange: function () {
+                //console.log(this);
+            }
+        });
 
         var resizeField = function () {
             searchField.style.width = (window.innerWidth - 70) + 'px';
@@ -455,43 +481,198 @@ app.controller('SearchCtrl', function ($scope, $rootScope, $acApi, $state) {
     });
 });
 
+app.controller('SearchTabAnimesCtrl', function ($scope, $rootScope, $acApi) {
+});
+
+app.controller('SearchTabMangasCtrl', function ($scope, $rootScope, $acApi) {
+    document.getElementById('tab2').addEventListener('tabFocused', function (e) {
+        AC.loading.show();
+        $scope.list = [];
+
+        $acApi.search('manga', $scope.searchQuery, function (data) {
+            $scope.list = data;
+
+            AC.loading.hide();
+        });
+    });
+});
+
 app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams) {
     var header,
         changeSeasonButton,
-        dialogSeasonButton;
+        dialogSeasonCancel,
+        dialogSeasonSave,
+        dialogEpisodeCancel,
+        dialogEpisodeSave,
+        hasSeason = [];
+
+    $scope.currentEpisode = '--';
+    $scope.currentSeason = '--';
+
+    AC.Db.query('SELECT * FROM AC_SERIE WHERE SERIE_ANIME_ID = ' + $stateParams.id + ' ORDER BY SERIE_DTEDITION DESC LIMIT 1', function (res) {
+        if (res.length > 0) {
+            $scope.currentSeason = res[0].SERIE_SEASON;
+            $scope.currentEpisode = res[0].SERIE_NUM;
+        } else {
+            $scope.currentSeason = 1;
+            $scope.currentEpisode = 0;
+        }
+    });
+
+    $scope.updateSeason = 0;
+    var seasonActions = function () {
+        // To open dialog
+        changeSeasonButton = document.getElementById('season-button');
+        changeSeasonButton.addEventListener('click', function (e) {
+            $scope.updateSeason = $scope.currentSeason;
+            $scope.$apply();
+
+            AC.Dialog.show('change-season');
+        });
+
+        // Cancel action button
+        dialogSeasonCancel = document.getElementById('dialog-season-cancel');
+        dialogSeasonCancel.addEventListener('click', function () {
+            AC.Dialog.hide('change-season');
+        });
+
+        // Save action button
+        dialogSeasonSave = document.getElementById('dialog-season-save');
+        dialogSeasonSave.addEventListener('click', function () {
+            AC.Db.query('SELECT * FROM AC_SERIE WHERE SERIE_ANIME_ID = ' + $stateParams.id + ' AND SERIE_SEASON = ' + $scope.updateSeason + ' LIMIT 1', function (res) {
+                if (res.length > 0) {
+                    AC.Db.query("UPDATE AC_SERIE SET SERIE_DTEDITION = '" + moment().format() + "' WHERE SERIE_SEASON = " + res[0].SERIE_SEASON, function () {
+                        $scope.currentSeason = res[0].SERIE_SEASON;
+                        $scope.currentEpisode = res[0].SERIE_NUM;
+
+                        $scope.updateSeason = res[0].SERIE_SEASON;
+                        $scope.updateEpisode = res[0].SERIE_NUM;
+
+                        $scope.$apply();
+                    });
+                } else {
+                    AC.Db.query("INSERT INTO AC_SERIE (SERIE_ANIME_ID, SERIE_SEASON, SERIE_NUM, SERIE_DTEDITION) VALUES (" + $stateParams.id + ", " + $scope.updateSeason + ", 0, '" + moment().format() + "')", function () {
+                        $scope.currentSeason = $scope.updateSeason;
+                        $scope.currentEpisode = 0;
+
+                        $scope.updateSeason = $scope.updateSeason;
+                        $scope.updateEpisode = 0;
+
+                        $scope.$apply();
+                    });
+                }
+            });
+
+            AC.Dialog.hide('change-season');
+        });
+    };
+
+    var episodeActions = function () {
+        // To open dialog
+        changeEpisodeButton = document.getElementById('episode-button');
+        changeEpisodeButton.addEventListener('click', function (e) {
+            $scope.updateEpisode = $scope.currentEpisode;
+            $scope.$apply();
+
+            AC.Dialog.show('change-episode');
+        });
+
+        // Cancel action button
+        dialogEpisodeCancel = document.getElementById('dialog-episode-cancel');
+        dialogEpisodeCancel.addEventListener('click', function () {
+            AC.Dialog.hide('change-episode');
+        });
+
+        // Save action button
+        dialogEpisodeSave = document.getElementById('dialog-episode-save');
+        dialogEpisodeSave.addEventListener('click', function () {
+            AC.Db.query('SELECT * FROM AC_SERIE WHERE SERIE_ANIME_ID = ' + $stateParams.id + ' AND SERIE_SEASON = ' + $scope.currentSeason + ' LIMIT 1', function (res) {
+                if (res.length > 0) {
+                    AC.Db.query("UPDATE AC_SERIE SET SERIE_NUM = " + $scope.updateEpisode + ", SERIE_DTEDITION = '" + moment().format() + "' WHERE SERIE_SEASON = " + res[0].SERIE_SEASON, function (res) {
+                        $scope.currentEpisode = $scope.updateEpisode;
+
+                        $scope.$apply();
+                    });
+                } else {
+                    AC.Db.query("INSERT INTO AC_SERIE (SERIE_ANIME_ID, SERIE_SEASON, SERIE_NUM, SERIE_DTEDITION) VALUES (" + $stateParams.id + ", " + $scope.updateSeason + ", " + $scope.updateEpisode + ", '" + moment().format() + "')", function (res) {
+                        $scope.currentEpisode = $scope.updateEpisode;
+
+                        $scope.$apply();
+                    });
+                }
+            });
+
+            AC.Dialog.hide('change-episode');
+        });
+    };
 
     AC.initialize($scope, function () {
         header = document.querySelector('#header.header-serie');
         header.style.height = (window.innerHeight - 100) + 'px';
 
-        changeSeasonButton = document.getElementById('season-button');
-        changeSeasonButton.addEventListener('click', function (e) {
-            AC.Dialog.show('change-season');
-        });
+        seasonActions();
+        episodeActions();
 
-        dialogSeasonButton = document.getElementById('dialog-season-button');
-        dialogSeasonButton.addEventListener('click', function () {
-            AC.Dialog.hide('change-season');
-        });
+
+        //if (hasSerie) {
+        //    AC.Db.query('UPDATE AC_SERIE WHERE SERIE_ANIME_ID = ' + $stateParams.id + ' LIMIT 1', function (res) {
+        //        if (res.length > 0) {
+        //            $scope.episodeNumber = res[0].SERIE_NUM;
+        //        }
+        //    });
+        //} else {
+        //    AC.Db.query('SELECT * FROM AC_SERIE WHERE SERIE_ANIME_ID = ' + $stateParams.id + ' LIMIT 1', function (res) {
+        //        if (res.length > 0) {
+        //            $scope.episodeNumber = res[0].SERIE_NUM;
+        //        }
+        //    });
+        //}
     });
 
     AC.loading.show();
 
-    $acApi.fromId('anime', $stateParams.id, function (data) {
+    $scope.serie = {};
+    $scope.translation = AC.Models.translation;
+
+    $acApi.fromId('anime', $stateParams.id, false, function (data) {
         AC.loading.hide();
 
         if (data) {
-            $scope.title = data.title_romaji;
-            $scope.titleJp = data.title_japanese;
-            $scope.img = data.image_url_lge;
-            $scope.score = data.average_score;
-            $scope.status = data.airing_status;
-            $scope.genres = data.genres;
-            $scope.episodes = data.total_episodes;
+            $scope.serie.title = data.title_romaji;
+            $scope.serie.titleJp = data.title_japanese;
+            $scope.serie.img = data.image_url_lge;
+            $scope.serie.score = data.average_score;
+            $scope.serie.status = data.airing_status;
+            $scope.serie.genres = AC.Tools.translateList(AC.Models.translation.genres, data.genres);
+            $scope.serie.episodes = data.total_episodes;
+            $scope.serie.duration = data.duration;
 
-            header.style.backgroundImage = 'url(' + $scope.img + ')';
+            header.style.backgroundImage = 'url(' + data.image_url_lge + ')';
         }
     });
+
+    $scope.favorite = function () {
+    };
+
+    $scope.updateEpisode = 0;
+    AC.Db.query('SELECT * FROM AC_SERIE WHERE SERIE_ANIME_ID = ' + $stateParams.id + ' LIMIT 1', function (res) {
+        if (res.length > 0) {
+            hasSeason[res[0].SERIE_SEASON] = true;
+            $scope.episodeNumber = res[0].SERIE_NUM;
+        } else {
+            hasSeason[1] = false;
+        }
+    });
+
+    $scope.numberLess = function (scopeNum) {
+        if ($scope[scopeNum] > 1) {
+            $scope[scopeNum]--;
+        }
+    };
+
+    $scope.numberPlus = function (scopeNum) {
+        $scope[scopeNum]++;
+    };
 });
 
 app.controller('GenreListCtrl', function ($scope, $location) {

@@ -6,4 +6,20 @@
     <a class="material-icons icon-btn right" id="searchButton">search</a>
 </div>
 
-<div id="content" ui-view="search-content"></div>
+<div id="tabs" class="ttla-tabs">
+    <ul>
+        <li class="btn-wave">
+            <a href="#tab1">Animes</a>
+        </li>
+        <li class="btn-wave">
+            <a href="#tab2">Mangás</a>
+        </li>
+    </ul>
+</div>
+
+<div id="ttla-container" class="ttla-container">
+    <div id="ttla-content" class="ttla-content content scroll">
+        <div id="tab1" class="tab-content" ui-view="anime-search"></div>
+        <div id="tab2" class="tab-content" ui-view="manga-search"></div>
+    </div>
+</div>

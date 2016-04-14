@@ -21,8 +21,8 @@
         var menuEl = document.getElementById('menu');
 
         if (!AC.TouchMenu) {
-            AC.TouchMenu = TouchMenu({
-                menu: menuEl
+            AC.TouchMenu = TouchMenuLA({
+                target: menuEl
             });
         }
     };

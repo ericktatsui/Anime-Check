@@ -2,50 +2,83 @@
 
 <div id="header" class="header-serie">
     <a ui-sref="home" class="material-icons menu-btn icon-btn left black">arrow_back</a>
-    
+
     <div class="anime-title">
-        <div class="fab btn-wave">
+        <div class="fab btn-wave" ng-click="favorite()">
             <i class="material-icons">add</i>
         </div>
-        <span class="title-jp" ng-bind="titleJp"></span>
+        <span class="title-jp" ng-bind="serie.titleJp"></span>
         <br />
-        <span class="title-rm" ng-bind="title"></span>
+        <span class="title-rm" ng-bind="serie.title"></span>
     </div>
 </div>
 
 <div class="content">
     <div class="btn-serie btn-wave" id="season-button">
-        1&ordf;
-        <span>Temporada</span>
+        <span ng-bind="currentSeason"></span><span ng-if="currentSeason != '--'">ª</span>
+        <span class="label">Temporada</span>
         <div class="divider"></div>
     </div>
-    <div class="btn-serie  btn-wave">
-        154
-        <span>Epis&oacute;dio</span>
+    <div class="btn-serie  btn-wave" id="episode-button">
+        <span ng-bind="currentEpisode"></span>
+        <span class="label">Episódio</span>
     </div>
     <hr />
 </div>
 
 <div class="content content-padding">
-    gjhfhbr
-    <br />
-    gjhfhbr
-    <br />
-    gjhfhbr
-    <br />
-    gjhfhbr
-    <br />
-    gjhfhbr
-    <br />
-    gjhfhbr
+    <ul class="list-infos">
+        <li>
+            <span class="key">Episódios</span>
+            <span class="value" ng-bind="serie.episodes + ' episódios'"></span>
+        </li>
+        <li>
+            <span class="key">Duração</span>
+            <span class="value" ng-bind="serie.duration + ' min.'"></span>
+        </li>
+        <li>
+            <span class="key">Status</span>
+            <span class="value" ng-bind="translation.status[serie.status]"></span>
+        </li>
+        <li>
+            <span class="key">Pontuação</span>
+            <span class="value" ng-bind="serie.score"></span>
+        </li>
+        <li>
+            <span class="key">Gêneros</span>
+            <div class="list">
+                <span class="tags" ng-repeat="genre in serie.genres" ng-bind="genre"></span>
+            </div>
+        </li>
+    </ul>
 </div>
 
 <div class="dialog" id="change-season">
-    <h2>Título</h2>
+    <h2>Temporada Atual</h2>
     <div class="dialog-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam at nulla eleifend, tincidunt ipsum sit amet, imperdiet est. Vivamus mollis aliquet dapibus.
+        <div class="number-picker --center">
+            <button class="--left" ng-click="numberLess('updateSeason')">-</button>
+            <input type="number" value="0" ng-model="updateSeason" />
+            <button class="--right" ng-click="numberPlus('updateSeason')">+</button>
+        </div>
     </div>
     <div class="dialog-buttons">
-        <button class="btn outline text-indigo btn-wave" id="dialog-season-button">Botão</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-season-cancel">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-season-save">Salvar</button>
+    </div>
+</div>
+
+<div class="dialog" id="change-episode">
+    <h2>Último Episódio</h2>
+    <div class="dialog-content">
+        <div class="number-picker --center">
+            <button class="--left" ng-click="numberLess('updateEpisode')">-</button>
+            <input type="number" value="0" ng-model="updateEpisode" />
+            <button class="--right" ng-click="numberPlus('updateEpisode')">+</button>
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" id="dialog-episode-cancel">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-episode-save">Salvar</button>
     </div>
 </div>
