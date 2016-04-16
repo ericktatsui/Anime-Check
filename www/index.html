@@ -15,19 +15,14 @@
 <body>
     <div id="view-index" ui-view></div>
 
-    <div id="menu" class="touch-menu-la tmla-menu">
+    <div id="menu" class="touch-menu-la tmla-menu" ng-controller="MenuCtrl">
         <ul class="menu-items">
-            <li>
-                <i class="material-icons">star_rate</i>Favoritos
-            </li>
             <li>
                 <i class="material-icons">list</i>Listas
             </li>
-            <li class="space"></li>
-            <li>hue</li>
-            <li>hue</li>
+            <li class="sub" ng-repeat="item in menuLists" ng-bind="item.LIST_NAME" ng-click="openList(item.LIST_ID)"></li>
             <li class="line"></li>
-            <li>hue</li>
+            <li class="space"></li>
         </ul>
     </div>
     

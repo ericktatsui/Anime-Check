@@ -1,7 +1,6 @@
-<div id="header">
+﻿<div id="header">
     <a class="material-icons menu-btn icon-btn left">menu</a>
-    <span class="title">Anime Check</span>
-    <!--<a ui-sref="home" class="material-icons icon-btn right">more_vert</a>-->
+    <span class="title">Lista: "<span ng-bind="list[0].LIST_NAME"></span>"</span>
     <a ui-sref="search" class="material-icons icon-btn right">search</a>
 </div>
 
@@ -13,9 +12,6 @@
         <li class="btn-wave">
             <a href="#tab2">Mangás</a>
         </li>
-        <li class="btn-wave">
-            <a href="#tab3">Filmes</a>
-        </li>
     </ul>
 </div>
 
@@ -23,6 +19,5 @@
     <div id="ttla-content" class="ttla-content content scroll">
         <div id="tab1" class="tab-content" ui-view="animes"></div>
         <div id="tab2" class="tab-content" ui-view="mangas"></div>
-        <div id="tab3" class="tab-content" ui-view="filmes"></div>
     </div>
 </div>

@@ -39,9 +39,12 @@
         },
         status: {
             'not yet aired': 'Ainda não exibido',
-            'currently airing': 'Sendo exibido',
+            'currently airing': 'Em exibição',
             'finished airing': 'Finalizado',
-            'cancelled': 'Cancelado'
+            'cancelled': 'Cancelado',
+            'not yet published': 'Ainda não publicado',
+            'currently Publishing': 'Em publicação',
+            'finished': 'Finalizado'
         },
         genres: {
             'action': 'Ação',

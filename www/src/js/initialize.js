@@ -1,20 +1,33 @@
-﻿var initialize = function ($scope, callback) {
+﻿var initialize = function ($scope, callback, splash) {
     var self;
 
     var constructor = function () {
         self = this;
 
-        $scope.$on('$stateChangeSuccess', function () {
-            self.menuBtnWave();
-            self.menu();
-            self.headerBtnWave();
-            self.allBtnWave();
-            self.setContainerSize();
+        if ( splash != true ) {
+            $scope.$on('$stateChangeSuccess', function() {
+                self.menuBtnWave();
+                self.menu();
+                self.headerBtnWave();
+                self.allBtnWave();
+                self.setContainerSize();
 
-            if (callback) {
-                callback();
-            }
-        });
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+    };
+
+    constructor.prototype.initDebug = function () {
+        if (window.device == undefined) {
+            window.device = {
+                model: 'debug',
+                platform: 'debug',
+                uuid: 'debug',
+                version: 1.0
+            };
+        }
     };
 
     constructor.prototype.menu = function () {

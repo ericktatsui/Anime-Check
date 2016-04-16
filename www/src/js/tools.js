@@ -58,6 +58,43 @@
             return translated;
         };
 
+        constructor.prototype.toInt = function (value) {
+            if (typeof value != 'number') {
+                value = 0;
+            }
+
+            return value;
+        };
+
+        constructor.prototype.toast = function (text, type) {
+            if (typeof window.plugins != 'undefined' && typeof window.plugins.toast == 'function') {
+                // type = showShortBottom
+                window.plugins.toast[type](text, function () { }, function () {
+                    alert(text);
+                });
+            } else {
+                alert(text);
+            }
+        };
+
+        constructor.prototype.imageToBase64 = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+
+            xhr.onload = function () {
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    callback(reader.result);
+                }
+
+                reader.readAsDataURL(xhr.response);
+            };
+
+            xhr.open('GET', url);
+            xhr.send();
+        };
+
         return new constructor();
     };
 

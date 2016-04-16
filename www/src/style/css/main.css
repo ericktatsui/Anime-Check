@@ -294,6 +294,13 @@ h2 {
 .hide {
   display: none;
 }
+.splash-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -44.5px;
+  margin-left: -44.5px;
+}
 #menu {
   color: #000;
 }
@@ -330,6 +337,7 @@ h2 {
   line-height: 56px;
   float: left;
   margin-left: 5px;
+  font-weight: 400;
 }
 #header a {
   text-decoration: none;
@@ -369,6 +377,15 @@ h2 {
 }
 #header.header-serie {
   background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  -moz-transition: height 1s ease;
+  -o-transition: height 1s ease;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  z-index: 1;
 }
 .wave-effect {
   position: absolute;
@@ -513,6 +530,18 @@ h2 {
   color: #09314B;
   font-weight: 500;
 }
+.serie-content {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+.serie-content-num {
+  height: 0;
+  -moz-transition: height 1s ease;
+  -o-transition: height 1s ease;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+}
 .fab {
   position: absolute;
   width: 56px;
@@ -524,6 +553,7 @@ h2 {
   top: -28px;
   right: 16px;
   overflow: hidden;
+  transition: visibility 0.5s ease;
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
   transform: translateZ(0);
@@ -534,6 +564,9 @@ h2 {
   left: 50%;
   margin-top: -12px;
   margin-left: -12px;
+}
+.fab .--hidden {
+  visibility: hidden;
 }
 ul.menu-items {
   margin: 0;
@@ -559,6 +592,9 @@ ul.menu-items li:after {
 }
 ul.menu-items li:active:not(.space):not(.line):after {
   background: rgba(0, 0, 0, 0.05);
+}
+ul.menu-items li.sub {
+  padding-left: 48px;
 }
 ul.menu-items li.space {
   height: 8px;
@@ -587,6 +623,9 @@ ul.menu-items .material-icons {
   color: #FFF;
   padding: 16px 0;
   box-sizing: border-box;
+}
+.btn-serie.--full {
+  width: 100%;
 }
 .btn-serie span.label {
   font-size: 14px;
@@ -620,8 +659,14 @@ ul.menu-items .material-icons {
 }
 .dialog .dialog-content {
   box-sizing: border-box;
-  padding: 20px 24px 14px 24px;
+  margin: 20px 0 14px 0;
+  padding: 0 24px;
   color: #000;
+  max-height: 250px;
+  overflow: auto;
+}
+.dialog .dialog-content.--no-side-margin {
+  padding: 0;
 }
 .dialog .dialog-buttons {
   padding: 8px 8px 8px 24px;
@@ -629,6 +674,15 @@ ul.menu-items .material-icons {
 }
 .dialog .dialog-buttons button {
   text-transform: uppercase;
+}
+.dialog ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dialog ul li {
+  padding: 15px 24px;
+  font-size: 16px;
 }
 .dialog-shadow {
   width: 100%;
@@ -659,6 +713,13 @@ ul.menu-items .material-icons {
 .list-infos li {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding: 15px 0;
+}
+.list-infos li:first-child {
+  padding-top: 0;
+}
+.list-infos li:last-child {
+  padding-bottom: 0;
+  border: 0;
 }
 .list-infos li .key {
   font-weight: 400;

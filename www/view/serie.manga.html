@@ -1,0 +1,83 @@
+﻿<div class="content serie-content-num" id="serie-content-num">
+    <div class="btn-serie --full btn-wave" id="chapter-button">
+        <span ng-bind="currentChapter"></span>
+        <span class="label">Último Capítulo</span>
+    </div>
+    <hr />
+</div>
+
+<div class="content content-padding">
+    <ul class="list-infos">
+        <li>
+            <span class="key">Outros títulos</span>
+            <div class="list" ng-bind="serie.synonyms"></div>
+        </li>
+        <li>
+            <span class="key">Capítulos</span>
+            <span class="value" ng-bind="serie.chapters + ' capítulos'"></span>
+        </li>
+        <li>
+            <span class="key">Volumes</span>
+            <span class="value" ng-bind="serie.volumes + ' volumes'"></span>
+        </li>
+        <li>
+            <span class="key">Status</span>
+            <span class="value" ng-bind="translation.status[serie.status]"></span>
+        </li>
+        <li>
+            <span class="key">Pontuação</span>
+            <span class="value" ng-bind="serie.score"></span>
+        </li>
+        <li>
+            <span class="key">Gêneros</span>
+            <div class="list">
+                <span class="tags" ng-repeat="genre in serie.genres" ng-bind="genre"></span>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="dialog" id="change-season">
+    <h2>Temporada Atual</h2>
+    <div class="dialog-content">
+        <div class="number-picker --center">
+            <button class="--left" ng-click="numberLess('updateSeason')">-</button>
+            <input type="number" value="0" ng-model="updateSeason" />
+            <button class="--right" ng-click="numberPlus('updateSeason')">+</button>
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" id="dialog-season-cancel">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-season-save">Salvar</button>
+    </div>
+</div>
+
+<div class="dialog" id="change-episode">
+    <h2>Último Episódio</h2>
+    <div class="dialog-content">
+        <div class="number-picker --center">
+            <button class="--left" ng-click="numberLess('updateEpisode')">-</button>
+            <input type="number" value="0" ng-model="updateEpisode" />
+            <button class="--right" ng-click="numberPlus('updateEpisode')">+</button>
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" id="dialog-episode-cancel">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-episode-save">Salvar</button>
+    </div>
+</div>
+
+<div class="dialog" id="change-chapter">
+    <h2>Último Capítulo</h2>
+    <div class="dialog-content">
+        <div class="number-picker --center">
+            <button class="--left" ng-click="numberLess('updateChapter')">-</button>
+            <input type="number" value="0" ng-model="updateChapter" />
+            <button class="--right" ng-click="numberPlus('updateChapter')">+</button>
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" id="dialog-chapter-cancel">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-chapter-save">Salvar</button>
+    </div>
+</div>
