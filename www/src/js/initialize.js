@@ -8,7 +8,7 @@
             $scope.$on('$stateChangeSuccess', function() {
                 self.menuBtnWave();
                 self.menu();
-                self.headerBtnWave();
+                //self.headerBtnWave();
                 self.allBtnWave();
                 self.setContainerSize();
 

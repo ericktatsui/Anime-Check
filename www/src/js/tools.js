@@ -67,7 +67,7 @@
         };
 
         constructor.prototype.toast = function (text, type) {
-            if (typeof window.plugins != 'undefined' && typeof window.plugins.toast == 'function') {
+            if (typeof window.plugins != 'undefined' && typeof window.plugins.toast[type] == 'function') {
                 // type = showShortBottom
                 window.plugins.toast[type](text, function () { }, function () {
                     alert(text);
@@ -93,6 +93,24 @@
 
             xhr.open('GET', url);
             xhr.send();
+        };
+
+        constructor.prototype.saveFile = function (url, callbackSucces, callbackError) {
+            if (window.Cordova != undefined) {
+                var fileTransfer = new FileTransfer(),
+                    fileSplit = url.split('/'),
+                    fileName = fileSplit[fileSplit.length - 1],
+                    filePath = cordova.file.externalDataDirectory + '/images/' + fileName;
+
+                fileTransfer.download(url, filePath, function(entry) {
+                        callbackSucces(entry.nativeURL);
+                    },
+                    function(error) {
+                        callbackError(error);
+                    });
+            } else {
+                callbackSucces(url);
+            }
         };
 
         return new constructor();

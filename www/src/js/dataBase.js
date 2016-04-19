@@ -87,6 +87,8 @@
             var batchList = [];
 
             batchList.push('DROP TABLE AC_INFO');
+            batchList.push('DROP TABLE AC_USER');
+            batchList.push('DROP TABLE AC_SERIE_CACHE');
             batchList.push('DROP TABLE AC_SERIE');
             batchList.push('DROP TABLE AC_LIST');
             batchList.push('DROP TABLE AC_SERIE_LIST');
@@ -98,11 +100,12 @@
             var batchList = [],
                 prefix = 'CREATE TABLE IF NOT EXISTS ';
 
-            batchList.push(prefix + 'AC_INFO (APP_VERSION real, APP_DT_INSTALL text, DEVICE_UUID text, DEVICE_MODEL text, DEVICE_PLATFORM text, DEVICE_VERSION real)');
-            batchList.push(prefix + 'CREATE TABLE IF NOT EXISTS AC_SERIE_CACHE (CACHE_ID integer primary key, CACHE_TITLE text, CACHE_TITLE_JP text, CACHE_IMG text, CACHE_SCORE real, CACHE_STATUS text, CACHE_GENRES text, CACHE_EPI_CHA integer, CACHE_SEASON_VOL integer, CACHE_SYNONYMS text)');
-            batchList.push(prefix + 'AC_SERIE (SERIE_ID integer primary key autoincrement, SERIE_EXT_ID integer, SERIE_TYPE text, SERIE_SEASON integer, SERIE_NUM integer, SERIE_DTEDITION text)');
-            batchList.push(prefix + 'AC_LIST (LIST_ID integer primary key autoincrement, LIST_NAME text, LIST_DTEDITION text)');
-            batchList.push(prefix + 'AC_SERIE_LIST (SL_ID integer primary key autoincrement, SL_SERIE_ID integer, SL_LIST_ID integer, SL_TYPE, SL_DTEDITION text)');
+            batchList.push(prefix + 'AC_INFO ( APP_VERSION real, APP_DT_INSTALL text, DEVICE_UUID text, DEVICE_MODEL text, DEVICE_PLATFORM text, DEVICE_VERSION real )');
+            batchList.push(prefix + 'AC_USER ( USER_ID integer primary key autoincrement, USER_NAME text, USER_EMAIL text, USER_PASSWORD text, USER_DTEDITION text )');
+            batchList.push(prefix + 'AC_SERIE_CACHE ( CACHE_ID integer, CACHE_TYPE text, CACHE_TITLE text, CACHE_TITLE_JP text, CACHE_IMG text, CACHE_SCORE real, CACHE_STATUS text, CACHE_DTEND text, CACHE_DTSTART text, CACHE_YOUTUBEID text, CACHE_GENRES text, CACHE_DURATION text, CACHE_EPISODES text, CACHE_CHAPTERS text, CACHE_VOLUMES text, CACHE_SYNONYMS text, CACHE_DTEDITION )');
+            batchList.push(prefix + 'AC_SERIE ( SERIE_ID integer primary key autoincrement, SERIE_EXT_ID integer, SERIE_TYPE text, SERIE_SEASON integer, SERIE_NUM integer, SERIE_DTEDITION text )');
+            batchList.push(prefix + 'AC_LIST ( LIST_ID integer primary key autoincrement, LIST_NAME text, LIST_DTEDITION text )');
+            batchList.push(prefix + 'AC_SERIE_LIST ( SL_ID integer primary key autoincrement, SL_SERIE_ID integer, SL_LIST_ID integer, SL_TYPE, SL_DTEDITION text )');
 
             self.executeBatch(batchList, callback);
         };
@@ -113,12 +116,17 @@
 
             self.query('SELECT COUNT(*) AS "count" FROM AC_INFO', function(res) {
                 if (res[0].count == 0) {
-                    batchList.push(prefix + "AC_INFO (APP_VERSION, APP_DT_INSTALL, DEVICE_UUID, DEVICE_MODEL, DEVICE_PLATFORM, DEVICE_VERSION) VALUES ('1.0', '" + moment().format() + "', '" + device.uuid + "', '" + device.model + "', '" + device.platform + "', " + device.version + ")");
+                    batchList.push(prefix + "AC_INFO (APP_VERSION, APP_DT_INSTALL, DEVICE_UUID, DEVICE_MODEL, DEVICE_PLATFORM, DEVICE_VERSION) VALUES ('1.1', '" + moment().format() + "', '" + device.uuid + "', '" + device.model + "', '" + device.platform + "', " + device.version + ")");
 
                     batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Assistindo', '" + moment().format() + "')");
                     batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Para Assistir', '" + moment().format() + "')");
-                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Finalizados', '" + moment().format() + "')");
-                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Dropados', '" + moment().format() + "')");
+                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Animes Finalizados', '" + moment().format() + "')");
+                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Animes Dropados', '" + moment().format() + "')");
+
+                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Lendo', '" + moment().format() + "')");
+                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Para Ler', '" + moment().format() + "')");
+                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Mangás Finalizados', '" + moment().format() + "')");
+                    batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Mangás Dropados', '" + moment().format() + "')");
 
                     self.executeBatch(batchList, callback);
                 } else {
@@ -129,7 +137,65 @@
             });
         };
 
-        // CREATE TABLE IF NOT EXISTS test_table (id integer primary key, data text, data_num integer)
+        constructor.prototype.mountInsert = function (table, data) {
+            var sql = 'INSERT INTO ' + table,
+                fields = '',
+                values = '';
+
+            for (var key in data) {
+                if (data[key] != null && data[key] != undefined) {
+                    fields += key + ', ';
+
+                    if (typeof data[key] == 'string') {
+                        values += "'" + data[key] + "', ";
+                    } else if (typeof data[key] == 'number') {
+                        values += data[key] + ", ";
+                    }
+                }
+            }
+
+            fields = fields.substr(0, fields.length - 2);
+            values = values.substr(0, values.length - 2);
+
+            sql += ' (' + fields + ') VALUES (' + values + ')';
+
+            return sql;
+        };
+
+        constructor.prototype.mountUpdate = function (table, condition, data) {
+            var sql = 'UPDATE ' + table + ' SET ',
+                fieldsValues = '';
+
+            for (var key in data) {
+                if (data[key] != null && data[key] != undefined) {
+                    fieldsValues += key + ' = ';
+
+                    if (typeof data[key] == 'string') {
+                        fieldsValues += "'" + data[key] + "', ";
+                    } else if (typeof data[key] == 'number') {
+                        fieldsValues += data[key] + ", ";
+                    }
+                }
+            }
+
+            fieldsValues = fieldsValues.substr(0, fieldsValues.length - 2);
+
+            sql += fieldsValues + ' WHERE ' + condition;
+
+            return sql;
+        };
+
+        constructor.prototype.insert = function (table, data, callback) {
+            var sql = self.mountInsert(table, data);
+
+            self.query(sql, callback);
+        };
+
+        constructor.prototype.update = function (table, condition, data, callback) {
+            var sql = self.mountUpdate(table, condition, data);
+
+            self.query(sql, callback);
+        };
 
         return new constructor();
     };

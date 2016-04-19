@@ -1,23 +1,6 @@
 ﻿<div id="header">
     <a class="material-icons menu-btn icon-btn left">menu</a>
-    <span class="title">Lista: "<span ng-bind="list[0].LIST_NAME"></span>"</span>
-    <a ui-sref="search" class="material-icons icon-btn right">search</a>
+    <span class="title">Lista: "<span ng-bind="listName"></span>"</span>
 </div>
 
-<div id="tabs" class="ttla-tabs">
-    <ul>
-        <li class="btn-wave">
-            <a href="#tab1">Animes</a>
-        </li>
-        <li class="btn-wave">
-            <a href="#tab2">Mangás</a>
-        </li>
-    </ul>
-</div>
-
-<div id="ttla-container" class="ttla-container">
-    <div id="ttla-content" class="ttla-content content scroll">
-        <div id="tab1" class="tab-content" ui-view="animes"></div>
-        <div id="tab2" class="tab-content" ui-view="mangas"></div>
-    </div>
-</div>
+<div class="content" ui-view="series"></div>

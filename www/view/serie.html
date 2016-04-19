@@ -19,11 +19,25 @@
     <h2>Selecione uma lista</h2>
     <div class="dialog-content --no-side-margin">
         <ul>
-            <li ng-click="addNewList()">Adicionar nova lista</li>
+            <!--<li ng-click="createNewList()">Adicionar nova lista</li>-->
             <li ng-repeat="item in lists" ng-click="addToList(item.LIST_ID)">{{item.LIST_NAME}}</li>
         </ul>
     </div>
     <div class="dialog-buttons">
         <button class="btn outline text-indigo btn-wave" id="dialog-list-cancel">Cancelar</button>
+    </div>
+</div>
+
+<div class="dialog" id="create-list">
+    <h2>Título para nova lista</h2>
+    <div class="dialog-content --no-side-margin">
+        <div class="input-text --form">
+            <!--<span>Nome</span>-->
+            <input type="text" value="" ng-model="newListName" placeholder="Digite aqui o título" />
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" id="dialog-create-cancel">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" id="dialog-create-save">Salvar</button>
     </div>
 </div>

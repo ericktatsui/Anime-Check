@@ -22,6 +22,16 @@
         black: '#000000',
         white: '#FFFFFF'
     },
+    toastTypes: {
+        SHORT_TOP: 'showShortTop',
+        SHORT_CENTER: 'showShortCenter',
+        SHORT_BOTTOM: 'showShortBottom',
+        LONG_TOP: 'showLongTop',
+        LONG_CENTER: 'showLongCenter',
+        LONG_BOTTOM: 'showLongBottom'
+    },
+    animeTypes: ['tv', 'movie', 'special', 'ova', 'ona', 'tv sort'],
+    mangaTypes: ['manga', 'novel', 'manhua', 'manhwa', 'one shot', 'doujin', 'one'],
     translation: {
         season: {
             'winter': 'Inverno',
@@ -35,7 +45,14 @@
             'special': 'Especial',
             'ova': 'OVA',
             'ona': 'ONA',
-            'tv short': 'Série Curta'
+            'tv short': 'Série Curta',
+            'manga': 'Mangá', 
+            'novel': 'Novel', 
+            'manhua': 'Manhua', 
+            'manhwa': 'Manhwa', 
+            'one shot': 'One Shot',
+            'one': 'One Shot',
+            'doujin': 'Doujin'
         },
         status: {
             'not yet aired': 'Ainda não exibido',

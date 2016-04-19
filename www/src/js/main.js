@@ -21,7 +21,7 @@ var TEMP = {
     movieList: null
 };
 
-app.run(function ($rootScope) {
+app.run(function ($rootScope, $state) {
     $rootScope.cutName = function (name) {
         var newName = name;
 
@@ -42,6 +42,11 @@ app.run(function ($rootScope) {
     };
 
     window.addEventListener('resize', $rootScope.calcCardHeight);
+
+    $rootScope.menuAction = function (pageName) {
+        AC.TouchMenu.close();
+        $state.go(pageName);
+    };
 });
 
 app.config(function ($stateProvider, $urlRouterProvider) {
@@ -52,6 +57,15 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         url: '/splash',
         templateUrl: 'view/splash.html',
         controller: 'SplashCtrl'
+    })
+    .state('main', {
+        url: '/main',
+        templateUrl: 'view/main.html'
+    })
+    .state('registration', {
+        url: '/registration',
+        templateUrl: 'view/registration.html',
+        controller: 'RegistrationCtrl'
     })
 	.state('home', {
 	    url: '/home',
@@ -116,18 +130,10 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 templateUrl: 'view/list.html',
                 controller: 'ListCtrl',
             },
-            'animes@list': {
+            'series@list': {
                 templateUrl: 'view/series.html',
-                controller: 'ListTabAnimesCtrl'
+                controller: 'ListSeriesCtrl'
             }
-            //'mangas@home': {
-            //    templateUrl: 'view/series.html',
-            //    controller: 'HomeTabMangasCtrl'
-            //},
-            //'filmes@home': {
-            //    templateUrl: 'view/series.html',
-            //    controller: 'HomeTabMoviesCtrl'
-            //}
         }
     })
 	.state('search', {
@@ -186,7 +192,7 @@ app.service('$acRequest', function ($http) {
     }
 });
 
-app.service('$acApi', function ($rootScope, $acRequest) {
+app.service('$acApi', function ($rootScope, $acRequest, $Cache) {
     this.getTokenApi = function (callback) {
         var accessToken = null;
 
@@ -245,17 +251,25 @@ app.service('$acApi', function ($rootScope, $acRequest) {
                 url = CONFIG.apiUrl + type + '/' + id + page + '/?access_token=' + token;
             }
 
-            $acRequest.get(
-                url,
-                function (data, status, headers, config) {
-                    callback(data);
-                    //console.log(data);
-                },
-                function (data, status, headers, config) {
-                    console.error(data);
-                    callback(data);
+            $Cache.getAnime(id, function (res) {
+                if (res.length == 0) {
+                    $acRequest.get(
+                        url,
+                        function(data, status, headers, config) {
+                            callback(data);
+                            //console.log(data);
+                        },
+                        function(data, status, headers, config) {
+                            console.error(data);
+                            callback(data);
+                        }
+                    );
+                } else {
+                    res[0].synonyms = res[0].synonyms.split(', ');
+                    res[0].genres = res[0].genres.split(', ');
+                    callback(res[0]);
                 }
-            );
+            });
         });
     };
 
@@ -318,13 +332,99 @@ app.service('$acApi', function ($rootScope, $acRequest) {
     };
 });
 
+app.service('$Cache', function () {
+    this.saveAnime = function (data, callbackSuccess, callbackError) {
+        AC.Tools.saveFile(data.image_url_lge, function (imgPath) {
+            var cache = {
+                CACHE_ID: data.id,
+                CACHE_TYPE: data.type.toLowerCase(),
+                CACHE_TITLE: data.title_romaji,
+                CACHE_TITLE_JP: data.title_japanese,
+                CACHE_IMG: imgPath,
+                CACHE_SCORE: data.average_score,
+                CACHE_STATUS: data.airing_status || data.publishing_status,
+                CACHE_DTEND: data.end_date,
+                CACHE_DTSTART: data.start_date,
+                CACHE_YOUTUBEID: data.youtube_id,
+                CACHE_GENRES: data.genres.join(', '),
+                CACHE_DURATION: data.duration,
+                CACHE_EPISODES: data.total_episodes,
+                CACHE_CHAPTERS: data.total_chapters,
+                CACHE_VOLUMES: data.total_volumes,
+                CACHE_SYNONYMS: data.synonyms.join(', '),
+                CACHE_DTEDITION: moment().format()
+            };
+
+            AC.Db.insert('AC_SERIE_CACHE', cache, callbackSuccess);
+        }, function () {
+            if (typeof callbackError == 'function') {
+                callbackError();
+            }
+        });
+    };
+
+    this.getAnime = function (id, callback) {
+        var sql = "SELECT";
+        sql += ' CACHE_ID AS "id", CACHE_TYPE AS "type", CACHE_TITLE AS "title_romaji", CACHE_TITLE_JP AS "title_japanese", CACHE_IMG AS "image_url_lge", CACHE_SCORE AS "average_score", CACHE_STATUS AS "airing_status", CACHE_DTEND AS "end_date", CACHE_DTSTART AS "start_date", CACHE_YOUTUBEID AS "youtube_id", CACHE_GENRES AS "genres", CACHE_DURATION AS "duration", CACHE_EPISODES AS "total_episodes", CACHE_CHAPTERS AS "total_chapters", CACHE_VOLUMES AS "total_volumes", CACHE_SYNONYMS AS "synonyms"';
+        sql += " FROM AC_SERIE_CACHE";
+        sql += " WHERE CACHE_ID = " + id;
+
+        AC.Db.query(sql, function (res) {
+            callback(res);
+        });
+    };
+});
+
 app.controller('SplashCtrl', function ($scope, $state) {
     document.addEventListener('dbReady', function () {
-        $state.go('home');
+        AC.Db.query('SELECT * FROM AC_USER', function (res) {
+            if (res.length > 0) {
+                localStorage.setItem('user', JSON.stringify(res[0]));
+                $state.go('home');
+            } else {
+                //$state.go('main');
+                $state.go('registration');
+            }
+        });
     });
 
     AC.initialize(null, null, true).initDebug();
     AC.Db.initialize();
+});
+
+app.controller('RegistrationCtrl', function ($scope, $state) {
+    $scope.saveUser = function () {
+        var sql = "INSERT INTO AC_USER";
+        sql += " (USER_NAME, USER_EMAIL, USER_PASSWORD, USER_DTEDITION)";
+        sql += " VALUES (";
+        sql += " '" + $scope.name + "',";
+        sql += " '" + $scope.email + "',";
+        sql += " '" + $scope.password + "',";
+        sql += " '" + moment().format() + "'";
+        sql += " )";
+
+        var status = true,
+            msg = '';
+
+        if ($scope.password !== $scope.rePassword) {
+            status = false;
+            msg += 'As senhas não conferem.';
+        }
+
+        if ($scope.email == undefined || $scope.email.indexOf('@') == 1) {
+            status = false;
+            msg += '\nE-mail inválido.';
+        }
+
+        if (status) {
+            AC.Db.query(sql, function (res) {
+                AC.Tools.toast('Salvo com sucesso.', 'showShortBottom');
+                $state.go('home');
+            });
+        } else {
+            AC.Tools.toast(msg, AC.Models.toastTypes.SHORT_BOTTOM);
+        }
+    };
 });
 
 app.controller('HomeCtrl', function ($scope, $state) {
@@ -352,8 +452,16 @@ app.controller('HomeCtrl', function ($scope, $state) {
     });
 
     $scope.openAnime = function (type, id) {
+        var globalType = 'anime';
+
+        type = type.toLowerCase();
+
+        if (AC.Models.mangaTypes.indexOf(type) != -1) {
+            globalType = 'manga';
+        }
+
         $state.go('serie', {
-            type: type,
+            type: globalType,
             id: id
         });
     };
@@ -365,8 +473,7 @@ app.controller('HomeTabAnimesCtrl', function ($scope, $rootScope, $acApi) {
     if (TEMP.animeList == null) {
         $acApi.list('anime',
         {
-            'year': CONFIG.currentYear,
-            'type': 'tv'
+            'year': CONFIG.currentYear
         }, function (data) {
             $scope.list = data;
             $scope.type = 'anime'; // to state param
@@ -438,8 +545,16 @@ app.controller('SearchCtrl', function ($scope, $rootScope, $acApi, $state) {
     $scope.type = 'anime';
 
     $scope.openAnime = function (type, id) {
+        var globalType = 'anime';
+
+        type = type.toLowerCase();
+
+        if (AC.Models.mangaTypes.indexOf(type) != -1) {
+            globalType = 'manga';
+        }
+
         $state.go('serie', {
-            type: type,
+            type: globalType,
             id: id
         });
     };
@@ -561,11 +676,13 @@ app.controller('SearchTabMangasCtrl', function ($scope, $rootScope, $acApi) {
     });
 });
 
-app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams) {
+app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, $Cache) {
     var header,
         serieContent,
         serieContentNum,
-        dialogListCancel;
+        dialogListCancel,
+        dialogCreateCancel,
+        dialogCreateSave;
 
     $scope.lists = [];
 
@@ -577,6 +694,7 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams) 
         serieContentNum = document.getElementById('serie-content-num');
 
         listActions();
+        //createListActions();
     });
 
     $scope.serie = {};
@@ -606,11 +724,32 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams) 
 
     $scope.addToList = function (listId) {
         AC.Db.query("INSERT INTO AC_SERIE_LIST (SL_SERIE_ID, SL_LIST_ID, SL_TYPE, SL_DTEDITION) VALUES (" + $stateParams.id + ", " + listId + ", '" + $stateParams.type + "', '" + moment().format() + "')", function () {
-            AC.Dialog.hide('choose-list');
+            $Cache.saveAnime($rootScope.showing, function () {
+                AC.Dialog.hide('choose-list');
 
-            header.style.height = (window.innerHeight - 100) + 'px';
-            serieContent.style.top = (window.innerHeight - 100) + 'px';
-            serieContentNum.style.height = '101px';
+                header.style.height = (window.innerHeight - 100) + 'px';
+                serieContent.style.top = (window.innerHeight - 100) + 'px';
+                serieContentNum.style.height = '101px';
+            });
+        });
+    };
+
+    $scope.createNewList = function() {
+        AC.Dialog.show('create-list');
+        AC.Dialog.hide('choose-list');
+    };
+
+    var createListActions = function () {
+        // Cancel action button
+        dialogCreateSave = document.getElementById('dialog-create-save');
+        dialogCreateSave.addEventListener('click', function () {
+            AC.Dialog.hide('create-list');
+        });
+
+        // Cancel action button
+        dialogCreateCancel = document.getElementById('dialog-create-cancel');
+        dialogCreateCancel.addEventListener('click', function () {
+            AC.Dialog.hide('create-list');
         });
     };
 });
@@ -651,6 +790,8 @@ app.controller('SerieAnimeCtrl', function ($scope, $rootScope, $acApi, $statePar
                     $scope.currentEpisode = 0;
                 }
 
+                $scope.$apply();
+
                 header.style.height = (window.innerHeight - 100) + 'px';
                 serieContent.style.top = (window.innerHeight - 100) + 'px';
 
@@ -665,6 +806,8 @@ app.controller('SerieAnimeCtrl', function ($scope, $rootScope, $acApi, $statePar
 
                 header.style.height = window.innerHeight + 'px';
                 serieContent.style.top = window.innerHeight + 'px';
+
+                $scope.$apply();
             }
         });
 
@@ -688,11 +831,13 @@ app.controller('SerieAnimeCtrl', function ($scope, $rootScope, $acApi, $statePar
             $scope.serie.synonyms = data.synonyms.join(', ');
 
             header.style.backgroundImage = 'url(' + data.image_url_lge + ')';
+
+            $rootScope.showing = data;
+
+            $scope.$apply();
         }
 
-        if (data.type.toLowerCase() == 'movie') {
-            animeType = 'movie';
-        }
+        animeType = data.type;
     });
 
     var seasonActions = function () {
@@ -788,7 +933,8 @@ app.controller('SerieMangaCtrl', function ($scope, $rootScope, $acApi, $statePar
         serieContentNum,
         changeChapterButton,
         dialogChapterSave,
-        dialogChapterCancel;
+        dialogChapterCancel,
+        mangaType = 'manga';
 
     $acApi.fromId('manga', $stateParams.id, false, function (data) {
         AC.loading.hide();
@@ -805,6 +951,10 @@ app.controller('SerieMangaCtrl', function ($scope, $rootScope, $acApi, $statePar
             $scope.serie.synonyms = data.synonyms.join(', ');
 
             header.style.backgroundImage = 'url(' + data.image_url_lge + ')';
+
+            $rootScope.showing = data;
+
+            mangaType = data.type;
         }
     });
 
@@ -837,7 +987,7 @@ app.controller('SerieMangaCtrl', function ($scope, $rootScope, $acApi, $statePar
                         $scope.$apply();
                     });
                 } else {
-                    AC.Db.query("INSERT INTO AC_SERIE (SERIE_EXT_ID, SERIE_NUM, SERIE_DTEDITION) VALUES (" + $stateParams.id + ", " + $scope.updateChapter + ", '" + moment().format() + "')", function () {
+                    AC.Db.query("INSERT INTO AC_SERIE (SERIE_EXT_ID, SERIE_TYPE, SERIE_NUM, SERIE_DTEDITION) VALUES (" + $stateParams.id + ", '" + mangaType + "', " + $scope.updateChapter + ", '" + moment().format() + "')", function () {
                         $scope.currentChapter = $scope.updateChapter;
                         $scope.updateChapter = $scope.updateChapter;
 
@@ -909,8 +1059,8 @@ app.controller('CategoryCtrl', function ($scope, $acApi, $stateParams) {
 });
 
 app.controller('MenuCtrl', function ($scope, $state) {
-    document.addEventListener('dbReady', function() {
-        AC.Db.query("SELECT * FROM AC_LIST ORDER BY LIST_ID", function(res) {
+    document.addEventListener('dbReady', function () {
+        AC.Db.query("SELECT * FROM AC_LIST ORDER BY LIST_ID", function (res) {
             $scope.menuLists = res;
         });
     });
@@ -924,42 +1074,48 @@ app.controller('MenuCtrl', function ($scope, $state) {
     };
 });
 
-app.controller('ListCtrl', function ($scope, $stateParams) {
+app.controller('ListCtrl', function ($scope, $state, $stateParams) {
+    AC.loading.show();
+
     var sql = "SELECT *";
     sql += " FROM AC_LIST";
     sql += " WHERE LIST_ID = " + $stateParams.id;
 
     AC.Db.query(sql, function (res) {
-        $scope.list = res;
-        console.log(res);
-
-        $scope.$apply();
+        $scope.listName = res[0].LIST_NAME;
     });
 
     AC.initialize($scope, function () {
-        AC.SlideTabs = TouchTabsLA({
-            container: document.getElementById('ttla-container'),
-            content: document.getElementById('ttla-content'),
-            tabs: document.getElementById('tabs'),
-            header: document.getElementById('header'),
-            resize: true,
-            onTabChange: function () {
-                //console.log(this);
-            }
+        document.getElementsByClassName('menu-btn')[0].addEventListener('touchend', function () {
+            AC.TouchMenu.open();
         });
     });
+
+    $scope.openAnime = function (type, id) {
+        var globalType = 'anime';
+
+        type = type.toLowerCase();
+
+        if (AC.Models.mangaTypes.indexOf(type) != -1) {
+            globalType = 'manga';
+        }
+
+        $state.go('serie', {
+            type: globalType,
+            id: id
+        });
+    };
 });
 
-app.controller('ListTabAnimesCtrl', function ($scope, $stateParams) {
-    $scope.type = 'anime'; // to state param
-
-    var sql = "SELECT *";
-    sql += " FROM AC_SERIE";
-    sql += " WHERE LIST_ID = " + $stateParams.id;
+app.controller('ListSeriesCtrl', function ($scope, $stateParams) {
+    var sql = "SELECT AC_SERIE_LIST.*, ";
+    sql += 'CACHE_ID AS "id", CACHE_TYPE AS "type", CACHE_TITLE AS "title_romaji", CACHE_TITLE_JP AS "title_japanese", CACHE_IMG AS "image_url_lge", CACHE_SCORE AS "average_score", CACHE_STATUS AS "airing_status", CACHE_DTEND AS "end_date", CACHE_DTSTART AS "start_date", CACHE_YOUTUBEID AS "youtube_id", CACHE_GENRES AS "genres", CACHE_DURATION AS "duration", CACHE_EPISODES AS "total_episodes", CACHE_CHAPTERS AS "total_chapters", CACHE_VOLUMES AS "total_volumes", CACHE_SYNONYMS AS "synonyms"';
+    sql += " FROM AC_SERIE_LIST";
+    sql += " INNER JOIN AC_SERIE_CACHE ON CACHE_ID = SL_SERIE_ID";
+    sql += " WHERE SL_LIST_ID = " + $stateParams.id;
 
     AC.Db.query(sql, function (res) {
         $scope.list = res;
-
         $scope.$apply();
 
         AC.loading.hide();
