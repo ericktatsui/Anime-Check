@@ -313,7 +313,7 @@ h2 {
     position: relative;
     z-index: 2;
 
-    &.--only {
+    &.-only {
         .depth(1);
     }
 
@@ -656,7 +656,7 @@ h2 {
     transform: translateZ(0);
     .depth(3);
 
-    &:active, &.--active {
+    &:active, &.-active {
         .depth(5);
     }
 
@@ -668,11 +668,11 @@ h2 {
         margin-left: -12px;
     }
 
-    .--hidden {
+    .-hidden {
         visibility: hidden;
     }
 
-    &.--bottom {
+    &.-bottom {
         bottom: 16px;
         right: 16px;
         z-index: 1;
@@ -725,7 +725,7 @@ ul.menu-items {
             margin-right: 8px;
         }
 
-        &.--blue-divider {
+        &.-blue-divider {
             border-bottom: 1px #122937 solid;
         }
 
@@ -776,7 +776,7 @@ ul.menu-items {
     padding: 16px 0;
     box-sizing: border-box;
 
-    &.--full {
+    &.-full {
         width: 100%;
     }
 
@@ -823,7 +823,7 @@ ul.menu-items {
         max-height: 250px;
         overflow: auto;
 
-        &.--no-side-margin {
+        &.-no-side-margin {
             padding-left: 0;
             padding-right: 0;
         }
@@ -847,11 +847,11 @@ ul.menu-items {
             padding: 15px 24px;
             font-size: 16px;
 
-            &.--divider {
+            &.-divider {
                 border-bottom: 1px #E0E0E0 solid;
             }
 
-            &.--selected {
+            &.-selected {
                 background-color: #F3F3F3;
                 font-weight: 500;
             }
@@ -888,10 +888,10 @@ ul.menu-items {
     font-weight: 400;
     display: inline-block;
 
-    &.--depth {
+    &.-depth {
         .depth(1);
 
-        &:active, &.--active {
+        &:active, &.-active {
             .depth(2);
         }
     }
@@ -900,12 +900,12 @@ ul.menu-items {
         background: #FFF;
     }
 
-    &.--alert {
+    &.-alert {
         background: #C31616;
         color: #FFF;
     }
 
-    &.--remove {
+    &.-remove {
         width: 100%;
         font-size: 12px;
     }
@@ -967,7 +967,7 @@ ul.menu-items {
 .number-picker {
     width: 200px;
 
-    &.--center {
+    &.-center {
         margin: 0 auto;
     }
 
@@ -996,13 +996,13 @@ ul.menu-items {
         color: #061E2D;
         border: 1px solid rgba(6, 30, 45, 0.15);
 
-        &.--left {
+        &.-left {
             margin: 0 -4px 0 0;
             border-right: 0;
             border-radius: 4px 0 0 4px;
         }
 
-        &.--right {
+        &.-right {
             margin: 0 0 0 -4px;
             border-left: 0;
             border-radius: 0 4px 4px 0;
@@ -1016,7 +1016,7 @@ ul.menu-items {
     bottom: 50px;
     text-align: center;
 
-    .btn.--login {
+    .btn.-login {
         width: 135px;
         background-color: #00C6DC;
         color: #061E2D;
@@ -1033,12 +1033,12 @@ ul.menu-items {
     margin-bottom: 10px !important;
     overflow: hidden;
 
-    &.--center {
+    &.-center {
         margin: 0 auto;
         display: block;
     }
 
-    &.--form {
+    &.-form {
         width: 90%;
     }
 

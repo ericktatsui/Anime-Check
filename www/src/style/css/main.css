@@ -352,7 +352,7 @@ h2 {
   position: relative;
   z-index: 2;
 }
-#header.--only {
+#header.-only {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 #header .mask {
@@ -657,7 +657,7 @@ h2 {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 .fab:active,
-.fab.--active {
+.fab.-active {
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
 .fab i {
@@ -667,10 +667,10 @@ h2 {
   margin-top: -12px;
   margin-left: -12px;
 }
-.fab .--hidden {
+.fab .-hidden {
   visibility: hidden;
 }
-.fab.--bottom {
+.fab.-bottom {
   bottom: 16px;
   right: 16px;
   z-index: 1;
@@ -717,7 +717,7 @@ ul.menu-items li .action-icon {
   font-size: 20px;
   margin-right: 8px;
 }
-ul.menu-items li.--blue-divider {
+ul.menu-items li.-blue-divider {
   border-bottom: 1px #122937 solid;
 }
 ul.menu-items li .badge-count {
@@ -761,7 +761,7 @@ ul.menu-items .material-icons {
   padding: 16px 0;
   box-sizing: border-box;
 }
-.btn-serie.--full {
+.btn-serie.-full {
   width: 100%;
 }
 .btn-serie span.label {
@@ -802,7 +802,7 @@ ul.menu-items .material-icons {
   max-height: 250px;
   overflow: auto;
 }
-.dialog .dialog-content.--no-side-margin {
+.dialog .dialog-content.-no-side-margin {
   padding-left: 0;
   padding-right: 0;
 }
@@ -822,10 +822,10 @@ ul.menu-items .material-icons {
   padding: 15px 24px;
   font-size: 16px;
 }
-.dialog ul li.--divider {
+.dialog ul li.-divider {
   border-bottom: 1px #E0E0E0 solid;
 }
-.dialog ul li.--selected {
+.dialog ul li.-selected {
   background-color: #F3F3F3;
   font-weight: 500;
 }
@@ -856,21 +856,21 @@ ul.menu-items .material-icons {
   font-weight: 400;
   display: inline-block;
 }
-.btn.--depth {
+.btn.-depth {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
-.btn.--depth:active,
-.btn.--depth.--active {
+.btn.-depth:active,
+.btn.-depth.-active {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 .btn.outline {
   background: #FFF;
 }
-.btn.--alert {
+.btn.-alert {
   background: #C31616;
   color: #FFF;
 }
-.btn.--remove {
+.btn.-remove {
   width: 100%;
   font-size: 12px;
 }
@@ -921,7 +921,7 @@ ul.menu-items .material-icons {
 .number-picker {
   width: 200px;
 }
-.number-picker.--center {
+.number-picker.-center {
   margin: 0 auto;
 }
 .number-picker input {
@@ -948,12 +948,12 @@ ul.menu-items .material-icons {
   color: #061E2D;
   border: 1px solid rgba(6, 30, 45, 0.15);
 }
-.number-picker button.--left {
+.number-picker button.-left {
   margin: 0 -4px 0 0;
   border-right: 0;
   border-radius: 4px 0 0 4px;
 }
-.number-picker button.--right {
+.number-picker button.-right {
   margin: 0 0 0 -4px;
   border-left: 0;
   border-radius: 0 4px 4px 0;
@@ -964,7 +964,7 @@ ul.menu-items .material-icons {
   bottom: 50px;
   text-align: center;
 }
-.content-bottom .btn.--login {
+.content-bottom .btn.-login {
   width: 135px;
   background-color: #00C6DC;
   color: #061E2D;
@@ -979,11 +979,11 @@ ul.menu-items .material-icons {
   margin-bottom: 10px !important;
   overflow: hidden;
 }
-.input-text.--center {
+.input-text.-center {
   margin: 0 auto;
   display: block;
 }
-.input-text.--form {
+.input-text.-form {
   width: 90%;
 }
 .input-text input {

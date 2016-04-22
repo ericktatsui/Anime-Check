@@ -40,7 +40,7 @@
             </div>
         </li>
         <li ng-if="inList">
-            <button class="btn --alert --remove --depth" ng-click="removeFromList()" ng-bind="'Remover da lista: ' + currentList.LIST_NAME"></button>
+            <button class="btn -alert -remove -depth" ng-click="removeFromList()" ng-bind="'Remover da lista: ' + currentList.LIST_NAME"></button>
         </li>
     </ul>
 </div>
@@ -48,10 +48,10 @@
 <div class="dialog" id="change-season">
     <h2>Temporada Atual</h2>
     <div class="dialog-content">
-        <div class="number-picker --center">
-            <button class="--left" ng-click="numberLess('updateSeason')">-</button>
+        <div class="number-picker -center">
+            <button class="-left" ng-click="numberLess('updateSeason')">-</button>
             <input type="number" value="0" ng-model="updateSeason" />
-            <button class="--right" ng-click="numberPlus('updateSeason')">+</button>
+            <button class="-right" ng-click="numberPlus('updateSeason')">+</button>
         </div>
     </div>
     <div class="dialog-buttons">
@@ -63,10 +63,10 @@
 <div class="dialog" id="change-episode">
     <h2>Último Episódio</h2>
     <div class="dialog-content">
-        <div class="number-picker --center">
-            <button class="--left" ng-click="numberLess('updateEpisode')">-</button>
+        <div class="number-picker -center">
+            <button class="-left" ng-click="numberLess('updateEpisode')">-</button>
             <input type="number" value="0" ng-model="updateEpisode" />
-            <button class="--right" ng-click="numberPlus('updateEpisode')">+</button>
+            <button class="-right" ng-click="numberPlus('updateEpisode')">+</button>
         </div>
     </div>
     <div class="dialog-buttons">

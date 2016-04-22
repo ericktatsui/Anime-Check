@@ -1,10 +1,10 @@
-<div id="header" class="--only">
+<div id="header" class="-only">
     <a ui-sref="all-my" class="material-icons menu-btn icon-btn left black">arrow_back</a>
     <span class="title">Categorias</span>
 </div>
 
 <div class="content scroll">
     <ul class="menu-items">
-        <li ui-sref="category({ name: key })" ng-repeat="(key, cat) in ::categories track by $index" ng-bind="cat" class=" --blue-divider"></li>
+        <li ui-sref="category({ name: key })" ng-repeat="(key, cat) in ::categories track by $index" ng-bind="cat" class="-blue-divider"></li>
     </ul>
 </div>

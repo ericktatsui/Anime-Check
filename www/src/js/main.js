@@ -744,9 +744,11 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, 
             AC.Dialog.hide('choose-list');
         });
 
-        AC.Db.query("SELECT * FROM AC_LIST", function (res) {
-            $scope.lists = res;
-        });
+        //AC.Db.query("SELECT * FROM AC_LIST", function (res) {
+        //    $scope.lists = res;
+        //});
+
+        $scope.lists = $rootScope.menuLists;
     };
 
     window.lockAddList = false;
@@ -830,7 +832,13 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, 
             LIST_NAME: $scope.newListName,
             LIST_DTEDITION: moment().format()
         }, function () {
-            AC.Db.query("SELECT * FROM AC_LIST", function (res) {
+            var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
+            sql += ' FROM AC_LIST l ';
+            sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
+            sql += ' GROUP BY LIST_ID';
+            sql += ' ORDER BY LIST_ID';
+
+            AC.Db.query(sql, function (res) {
                 $scope.lists = res;
                 $rootScope.menuLists = res;
 
@@ -906,7 +914,7 @@ app.controller('SerieAnimeCtrl', function ($scope, $rootScope, $acApi, $statePar
                     serieContentNum.style.height = '101px';
                 }, 1000);
 
-                //fab.className = 'fab btn-wave --hidden';
+                //fab.className = 'fab btn-wave -hidden';
             } else {
                 $scope.currentSeason = 1;
                 $scope.currentEpisode = 0;
@@ -1253,12 +1261,20 @@ app.controller('ListCtrl', function ($scope, $rootScope, $state, $stateParams) {
 
         AC.Db.delete('AC_LIST', 'LIST_ID = ' + $stateParams.id, function () {
             AC.Db.delete('AC_SERIE_LIST', 'SL_LIST_ID = ' + $stateParams.id, function () {
-                AC.Db.query("SELECT * FROM AC_LIST ORDER BY LIST_ID", function (res) {
+                var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
+                sql += ' FROM AC_LIST l ';
+                sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
+                sql += ' GROUP BY LIST_ID';
+                sql += ' ORDER BY LIST_ID';
+
+                AC.Db.query(sql, function (res) {
                     $rootScope.menuLists = res;
 
                     AC.Tools.toast('Lista excluída com sucesso.', AC.Models.toastTypes.SHORT_BOTTOM);
                     AC.loading.hide();
                     $state.go('all-my');
+
+                    $scope.$apply();
                 });
             });
         });
@@ -1280,7 +1296,14 @@ app.controller('ListCtrl', function ($scope, $rootScope, $state, $stateParams) {
 
             $scope.listName = $scope.newName;
 
-            AC.Db.query("SELECT * FROM AC_LIST ORDER BY LIST_ID", function (res) {
+
+            var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
+            sql += ' FROM AC_LIST l ';
+            sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
+            sql += ' GROUP BY LIST_ID';
+            sql += ' ORDER BY LIST_ID';
+
+            AC.Db.query(sql, function (res) {
                 $rootScope.menuLists = res;
                 $scope.$apply();
             });
@@ -1475,10 +1498,12 @@ app.controller('ListsCtrl', function ($scope) {
     });
 
 
-    AC.Db.query('SELECT * FROM AC_LIST', function (res) {
-        $scope.lists = res;
-        $scope.$apply();
-    });
+    //AC.Db.query('SELECT * FROM AC_LIST', function (res) {
+    //    $scope.lists = res;
+    //    $scope.$apply();
+    //});
+
+    $scope.lists = $rootScope.menuLists;
 });
 
 
@@ -1487,11 +1512,11 @@ app.directive('btn', function () {
         restrict: 'C', //E = element, A = attribute, C = class, M = comment
         link: function($scope, element, attrs) {
             element.on('touchstart', function() {
-                this.className = this.className + ' --active';
+                this.className = this.className + ' -active';
             });
 
             element.on('touchend', function () {
-                this.className = this.className.replace(' --active');
+                this.className = this.className.replace(' -active');
             });
         }
     }
@@ -1502,11 +1527,11 @@ app.directive('fab', function () {
         restrict: 'C', //E = element, A = attribute, C = class, M = comment
         link: function ($scope, element, attrs) {
             element.on('touchstart', function () {
-                this.className = this.className + ' --active';
+                this.className = this.className + ' -active';
             });
 
             element.on('touchend', function () {
-                this.className = this.className.replace(' --active');
+                this.className = this.className.replace(' -active');
             });
         }
     }

@@ -1,11 +1,11 @@
-﻿<div id="header" class="--only">
+﻿<div id="header" class="-only">
     <a ui-sref="all-my" class="material-icons menu-btn icon-btn left black">arrow_back</a>
     <span class="title">Lista: "<span ng-bind="listName"></span>"</span>
     <button ng-click="delete()" class="material-icons icon-btn right">delete</button>
     <button ng-click="edit()" class="material-icons icon-btn right">mode_edit</button>
 </div>
 
-<div class="fab --bottom" ui-sref="search">
+<div class="fab -bottom" ui-sref="search">
     <i class="material-icons">add</i>
 </div>
 
@@ -24,8 +24,8 @@
 
 <div class="dialog" id="change-name">
     <h2>Editar nome da lista</h2>
-    <div class="dialog-content --no-side-margin">
-        <div class="input-text --form">
+    <div class="dialog-content -no-side-margin">
+        <div class="input-text -form">
             <input type="text" value="" ng-model="newName" placeholder="Digite o novo nome" />
         </div>
     </div>
