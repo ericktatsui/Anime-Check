@@ -1,6 +1,36 @@
-﻿<div id="header">
-    <a class="material-icons menu-btn icon-btn left">menu</a>
+﻿<div id="header" class="--only">
+    <a ui-sref="all-my" class="material-icons menu-btn icon-btn left black">arrow_back</a>
     <span class="title">Lista: "<span ng-bind="listName"></span>"</span>
+    <button ng-click="delete()" class="material-icons icon-btn right">delete</button>
+    <button ng-click="edit()" class="material-icons icon-btn right">mode_edit</button>
 </div>
 
-<div class="content" ui-view="series"></div>
+<div class="fab --bottom" ui-sref="search">
+    <i class="material-icons">add</i>
+</div>
+
+<div class="content scroll" ui-view="series"></div>
+
+<div class="dialog" id="delete-list">
+    <h2>Deletar lista?</h2>
+    <div class="dialog-content">
+        Deletar a lista junto com seus animes?
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" ng-click="closeDialog('delete-list')">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" ng-click="deleteList()">Deletar</button>
+    </div>
+</div>
+
+<div class="dialog" id="change-name">
+    <h2>Editar nome da lista</h2>
+    <div class="dialog-content --no-side-margin">
+        <div class="input-text --form">
+            <input type="text" value="" ng-model="newName" placeholder="Digite o novo nome" />
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" ng-click="closeDialog('change-name')">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" ng-click="saveName()">Salvar</button>
+    </div>
+</div>

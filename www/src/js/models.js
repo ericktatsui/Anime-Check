@@ -61,7 +61,8 @@
             'cancelled': 'Cancelado',
             'not yet published': 'Ainda não publicado',
             'currently Publishing': 'Em publicação',
-            'finished': 'Finalizado'
+            'finished': 'Finalizado',
+            'publishing': 'Em publicação'
         },
         genres: {
             'action': 'Ação',
@@ -85,7 +86,7 @@
             'mecha': 'Mecha',
             'military': 'Militares',
             'music': 'Música',
-            'mystery': '´Mistério',
+            'mystery': 'Mistério',
             'parody': 'Paródia',
             'police': 'Polícia',
             'psychological': 'Psicológico',

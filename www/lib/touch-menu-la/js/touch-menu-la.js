@@ -16,7 +16,7 @@ var TouchMenuLA = function (options) {
         self = this;
 
         defaults = {
-            width: 280,
+            width: (window.innerWidth < 376 ? window.innerWidth : 376) - 56,
             zIndex: 99999,
             disableSlide: false,
             handleSize: 20,
@@ -83,6 +83,7 @@ var TouchMenuLA = function (options) {
         var opacity = parseFloat((newMenuPos / options.width) * options.maxMaskOpacity);
 
         mask.style.opacity = opacity;
+        options.target.boxShadow = '0 0 10px ' + opacity + 'px #000';
 
         if (opacity === 0) {
             mask.style.zIndex = -1;
@@ -150,6 +151,7 @@ var TouchMenuLA = function (options) {
         options.target.style.transform = 'translate3d(' + options.width + 'px, 0, 0)';
         options.target.style.WebkitTransform = 'translate3d(' + options.width + 'px, 0, 0)';
         options.target.style.MozTransform = 'translate3d(' + options.width + 'px, 0, 0)';
+        options.target.style.boxShadow = '0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)';
 
         currentPos = options.width;
         this.isVisible = true;
@@ -160,6 +162,8 @@ var TouchMenuLA = function (options) {
 
     TouchMenuLA.prototype.close = function () {
         options.target.className = menuClassName + " tmla-menu closed";
+        options.target.style.boxShadow = '';
+
         currentPos = 0;
         self.isVisible = false;
 

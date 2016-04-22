@@ -18,19 +18,32 @@
     </div>
 
     <div id="menu" class="touch-menu-la tmla-menu" ng-controller="MenuCtrl">
-        <ul class="menu-items">
-            <li ng-click="menuAction('search')"><i class="material-icons">search</i> Buscar</li>
-            <li ng-click="menuAction('home')"><i class="material-icons">fiber_new</i> Últimos Lançamentos</li>
-            <li class="line"></li>
-            <li class="space"></li>
-            <li>
-                <i class="material-icons">list</i> Listas
-            </li>
-            <li class="sub" ng-repeat="item in menuLists" ng-click="openList(item.LIST_ID)">
-                <i class="material-icons">chevron_right</i>
-                <span ng-bind="item.LIST_NAME"></span>
-            </li>
-        </ul>
+        <div class="menu-content">
+            <div class="user-content">
+                <div class="photo">
+                    <img src="src/assets/user-no-photo.png" alt="" />
+                </div>
+                <div class="infos">
+                    <div class="name" ng-bind="userInfos.USER_NAME"></div>
+                    <div class="email" ng-bind="userInfos.USER_EMAIL"></div>
+                </div>
+            </div>
+            <ul class="menu-items">
+                <li ng-click="menuAction('search')"><i class="material-icons">search</i> Buscar</li>
+                <li ng-click="menuAction('all-my')"><i class="material-icons">view_module</i> Todos das minhas listas</li>
+                <li ng-click="menuAction('home')"><i class="material-icons">fiber_new</i> Últimos Adicionados</li>
+                <li ng-click="menuAction('categoryList')"><i class="material-icons">label</i> Categorias</li>
+                <li class="line"></li>
+                <li class="space"></li>
+                <li>
+                    <i class="material-icons">list</i> Listas
+                </li>
+                <li class="sub" ng-repeat="item in menuLists track by $index" ng-click="openList(item.LIST_ID)">
+                    <span ng-bind="item.LIST_NAME"></span>
+                    <span class="badge-count" ng-bind="item.count"></span>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 200 200" id="spinner-content">
@@ -48,7 +61,7 @@
     <script src="lib/hammer/hammer.min.js"></script>
 
     <!-- Touch Menu Like Android -->
-    <script src="lib/touch-menu-la/js/touch-menu-la.min.js"></script>
+    <script src="lib/touch-menu-la/js/touch-menu-la.js"></script>
 
     <!-- Slide Tabs Like Android -->
     <script src="lib/touch-tabs-la/js/touch-tabs-la.js"></script>

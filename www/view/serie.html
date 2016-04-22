@@ -1,11 +1,13 @@
-<div class="mask"></div>
-
 <div id="header" class="header-serie">
-    <a ui-sref="home" class="material-icons menu-btn icon-btn left black">arrow_back</a>
+    <a ui-sref="all-my" class="material-icons menu-btn icon-btn left black">arrow_back</a>
+    <div class="top-shadow"></div>
 
     <div class="anime-title">
         <div class="fab btn-wave" id="fab" ng-click="selectList()" ng-if="!inList">
             <i class="material-icons">add</i>
+        </div>
+        <div class="fab btn-wave" id="fab" ng-click="dialogMoveList()" ng-if="inList">
+            <i class="material-icons">list</i>
         </div>
         <span class="title-jp" ng-bind="serie.titleJp"></span>
         <br />
@@ -19,8 +21,10 @@
     <h2>Selecione uma lista</h2>
     <div class="dialog-content --no-side-margin">
         <ul>
-            <!--<li ng-click="createNewList()">Adicionar nova lista</li>-->
-            <li ng-repeat="item in lists" ng-click="addToList(item.LIST_ID)">{{item.LIST_NAME}}</li>
+            <li ng-click="createNewList('choose-list')">
+                <i class="material-icons">add</i> Adicionar nova lista
+            </li>
+            <li ng-repeat="item in lists track by $index" ng-click="addToList(item)">{{item.LIST_NAME}}</li>
         </ul>
     </div>
     <div class="dialog-buttons">
@@ -29,15 +33,30 @@
 </div>
 
 <div class="dialog" id="create-list">
-    <h2>Título para nova lista</h2>
+    <h2>TÃ­tulo para nova lista</h2>
     <div class="dialog-content --no-side-margin">
         <div class="input-text --form">
             <!--<span>Nome</span>-->
-            <input type="text" value="" ng-model="newListName" placeholder="Digite aqui o título" />
+            <input type="text" value="" ng-model="newListName" placeholder="Digite aqui o tÃ­tulo" />
         </div>
     </div>
     <div class="dialog-buttons">
-        <button class="btn outline text-indigo btn-wave" id="dialog-create-cancel">Cancelar</button>
-        <button class="btn outline text-indigo btn-wave" id="dialog-create-save">Salvar</button>
+        <button class="btn outline text-indigo btn-wave" ng-click="cancelCreate()">Cancelar</button>
+        <button class="btn outline text-indigo btn-wave" ng-click="saveCreate()">Salvar</button>
+    </div>
+</div>
+
+<div class="dialog" id="move-list">
+    <h2>Mover para lista</h2>
+    <div class="dialog-content --no-side-margin">
+        <ul>
+            <li ng-click="createNewList('move-list')">
+                <i class="material-icons">add</i> Adicionar nova lista
+            </li>
+            <li ng-repeat="item in lists track by $index" ng-click="moveToList(item)" ng-class="item.LIST_ID == currentList.LIST_ID ? '--selected' : ''">{{item.LIST_NAME}}</li>
+        </ul>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn outline text-indigo btn-wave" ng-click="closeDialog('move-list')">Cancelar</button>
     </div>
 </div>

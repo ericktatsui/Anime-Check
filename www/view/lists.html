@@ -1,0 +1,10 @@
+<div id="header">
+    <a ui-sref="all-my" class="material-icons menu-btn icon-btn left black">arrow_back</a>
+    <span class="title">Listas</span>
+</div>
+
+<div class="content scroll">
+    <ul class="menu-items">
+        <li ui-sref="list({ id: list.LIST_ID })" ng-repeat="list in lists" ng-bind="list.LIST_NAME" class=" --blue-divider"></li>
+    </ul>
+</div>

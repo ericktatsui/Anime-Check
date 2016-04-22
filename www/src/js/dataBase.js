@@ -62,9 +62,15 @@
             self.db.transaction(function (tx) {
                 tx.executeSql(sql, [], function (tx, res) {
                     if (typeof callback == 'function') {
-                        callback( self.resToArray(res.rows) );
+                        callback(self.resToArray(res.rows), res.rowsAffected);
                     }
                 });
+            });
+        };
+
+        constructor.prototype.debug = function(query) {
+            self.query(query, function(res) {
+                console.log(res);
             });
         };
 
@@ -101,7 +107,7 @@
                 prefix = 'CREATE TABLE IF NOT EXISTS ';
 
             batchList.push(prefix + 'AC_INFO ( APP_VERSION real, APP_DT_INSTALL text, DEVICE_UUID text, DEVICE_MODEL text, DEVICE_PLATFORM text, DEVICE_VERSION real )');
-            batchList.push(prefix + 'AC_USER ( USER_ID integer primary key autoincrement, USER_NAME text, USER_EMAIL text, USER_PASSWORD text, USER_DTEDITION text )');
+            batchList.push(prefix + 'AC_USER ( USER_ID integer primary key autoincrement, USER_NAME text, USER_EMAIL text, USER_PASSWORD text, USER_PHOTO text, USER_DTEDITION text )');
             batchList.push(prefix + 'AC_SERIE_CACHE ( CACHE_ID integer, CACHE_TYPE text, CACHE_TITLE text, CACHE_TITLE_JP text, CACHE_IMG text, CACHE_SCORE real, CACHE_STATUS text, CACHE_DTEND text, CACHE_DTSTART text, CACHE_YOUTUBEID text, CACHE_GENRES text, CACHE_DURATION text, CACHE_EPISODES text, CACHE_CHAPTERS text, CACHE_VOLUMES text, CACHE_SYNONYMS text, CACHE_DTEDITION )');
             batchList.push(prefix + 'AC_SERIE ( SERIE_ID integer primary key autoincrement, SERIE_EXT_ID integer, SERIE_TYPE text, SERIE_SEASON integer, SERIE_NUM integer, SERIE_DTEDITION text )');
             batchList.push(prefix + 'AC_LIST ( LIST_ID integer primary key autoincrement, LIST_NAME text, LIST_DTEDITION text )');
@@ -196,6 +202,18 @@
 
             self.query(sql, callback);
         };
+
+        constructor.prototype.remove = function (table, condition, callback) {
+            var sql = 'DELETE FROM ' + table;
+
+            if (condition != undefined && condition != '' && condition != null) {
+                sql += ' WHERE ' + condition;
+            }
+
+            self.query(sql, callback);
+        };
+
+        constructor.prototype.delete = constructor.prototype.remove;
 
         return new constructor();
     };

@@ -52,14 +52,19 @@
             var translated = [];
 
             for (var i = toTranslate.length; i--;) {
-                translated.push(list[toTranslate[i].toLowerCase().replace(/( )/g, '_')]);
+                translated.push({
+                    original: toTranslate[i],
+                    translated: list[toTranslate[i].toLowerCase().replace(/( )/g, '_')]
+                });
             }
 
             return translated;
         };
 
         constructor.prototype.toInt = function (value) {
-            if (typeof value != 'number') {
+            value = parseInt(value);
+
+            if (value == 'NaN') {
                 value = 0;
             }
 
@@ -102,10 +107,10 @@
                     fileName = fileSplit[fileSplit.length - 1],
                     filePath = cordova.file.externalDataDirectory + '/images/' + fileName;
 
-                fileTransfer.download(url, filePath, function(entry) {
-                        callbackSucces(entry.nativeURL);
-                    },
-                    function(error) {
+                fileTransfer.download(url, filePath, function (entry) {
+                    callbackSucces(entry.nativeURL);
+                },
+                    function (error) {
                         callbackError(error);
                     });
             } else {

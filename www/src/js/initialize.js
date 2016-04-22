@@ -6,7 +6,7 @@
 
         if ( splash != true ) {
             $scope.$on('$stateChangeSuccess', function() {
-                self.menuBtnWave();
+                //self.menuBtnWave();
                 self.menu();
                 //self.headerBtnWave();
                 self.allBtnWave();
@@ -36,7 +36,7 @@
         if (!AC.TouchMenu) {
             AC.TouchMenu = TouchMenuLA({
                 target: menuEl
-            });
+        });
         }
     };
 

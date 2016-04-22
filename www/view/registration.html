@@ -1,21 +1,22 @@
 ﻿<div class="content-bottom">
     <img src="src/assets/splash-logo.png" />
-
-    <div class="input-text --center --form">
-        <!--<span>Nome</span>-->
-        <input type="text" value="" ng-model="name" placeholder="Nome" />
-    </div>
-    <div class="input-text --center --form">
-        <!--<span>Nome</span>-->
-        <input type="email" value="" ng-model="email" placeholder="E-mail" />
-    </div>
-    <div class="input-text --center --form">
-        <!--<span>Nome</span>-->
-        <input type="password" value="" ng-model="password" placeholder="Senha" />
-    </div>
-    <div class="input-text --center --form">
-        <!--<span>Nome</span>-->
-        <input type="password" value="" ng-model="rePassword" placeholder="Confirme a senha" />
-    </div>
-    <button class="btn --login" ng-click="saveUser()">Registrar</button>
+    <form ng-submit="saveUser()">
+        <div class="input-text --center --form">
+            <!--<span>Nome</span>-->
+            <input type="text" value="" ng-model="name" placeholder="Nome" />
+        </div>
+        <div class="input-text --center --form">
+            <!--<span>Nome</span>-->
+            <input type="email" value="" ng-model="email" placeholder="E-mail" />
+        </div>
+        <div class="input-text --center --form">
+            <!--<span>Nome</span>-->
+            <input type="password" value="" ng-model="password" placeholder="Senha" />
+        </div>
+        <div class="input-text --center --form">
+            <!--<span>Nome</span>-->
+            <input type="password" value="" ng-model="rePassword" placeholder="Confirme a senha" />
+        </div>
+        <button type="submit" class="btn --login --depth">Registrar</button>
+    </form>
 </div>
