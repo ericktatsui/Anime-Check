@@ -358,7 +358,7 @@ app.service('$acApi', function ($rootScope, $acRequest, $Cache) {
     };
 });
 
-app.service('$Cache', function () {
+app.service('$Cache', function ($rootScope) {
     this.saveAnime = function (data, callbackSuccess, callbackError) {
         this.getAnime(data.id, function (res) {
             if (res.length == 0) {
@@ -405,6 +405,23 @@ app.service('$Cache', function () {
 
         AC.Db.query(sql, function (res) {
             callback(res);
+        });
+    };
+
+    this.refreshMenu = function (callback) {
+        var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
+        sql += ' FROM AC_LIST l ';
+        sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
+        sql += ' GROUP BY LIST_ID';
+        sql += ' ORDER BY LIST_ID';
+
+        AC.Db.query(sql, function (res) {
+            $rootScope.menuLists = res;
+            $rootScope.$apply();
+
+            if (typeof callback == 'function') {
+                callback(res);
+            }
         });
     };
 });
@@ -658,16 +675,12 @@ app.controller('SearchCtrl', function ($scope, $rootScope, $acApi, $state) {
             searchField.focus();
         }
 
-        searchField.addEventListener('keypress', function (e) {
-            if (e.which == 13) {
-                $state.go('search', { term: searchField.value });
+        $scope.searchSubmit = function (e) {
+            $state.go('search', { term: searchField.value });
 
-                requestSearch();
-                hideSearchField();
-
-                AC.TouchTabsLA.setContainerSize();
-            }
-        });
+            requestSearch();
+            hideSearchField();
+        };
 
         searchText.addEventListener('click', showSearchField);
         searchButton.addEventListener('click', showSearchField);
@@ -679,28 +692,46 @@ app.controller('SearchCtrl', function ($scope, $rootScope, $acApi, $state) {
 });
 
 app.controller('SearchTabAnimesCtrl', function ($scope, $acApi, $stateParams) {
-    $acApi.search('anime', $stateParams.term, function (data) {
-        $scope.list = data;
+    if ($stateParams.term != '' && $stateParams.term != undefined && $stateParams.term != null) {
+        $acApi.search('anime', $stateParams.term, function (data) {
+            $scope.list = data;
 
-        AC.loading.hide();
-    });
+            AC.loading.hide();
+
+            setTimeout(function () {
+                AC.TouchTabsLA.setContainerSize();
+            }, 500);
+        });
+    } else {
+        $scope.list = [];
+    }
 });
 
 app.controller('SearchTabMangasCtrl', function ($scope, $rootScope, $acApi, $stateParams) {
-    document.getElementById('tab2').addEventListener('tabFocused', function (e) {
-        AC.loading.show();
+    if ($stateParams.term == '' || $stateParams.term == undefined || $stateParams.term == null) {
+        $scope.lastMangaSearch = [];
+    }
 
+    document.getElementById('tab2').addEventListener('tabFocused', function (e) {
         if ($scope.lastMangaSearch == undefined || $scope.lastMangaSearch == null || $scope.lastMangaSearch == '') {
+            AC.loading.show();
+
             $acApi.search('manga', $stateParams.term, function (data) {
                 $scope.list = data;
                 $scope.lastMangaSearch = data;
-
+                
                 AC.loading.hide();
+
+                setTimeout(function() {
+                    AC.TouchTabsLA.setContainerSize();
+                }, 500);
             });
         } else {
             $scope.list = $scope.lastMangaSearch;
 
-            AC.loading.hide();
+            setTimeout(function () {
+                AC.TouchTabsLA.setContainerSize();
+            }, 500);
         }
 
         $scope.$apply();
@@ -774,6 +805,8 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, 
                         window.lockAddList = false;
                     }, 500);
                 });
+
+                $Cache.refreshMenu();
             });
         }
     };
@@ -795,6 +828,8 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, 
 
             $rootScope.currentList = list;
             $scope.$apply();
+
+            $Cache.refreshMenu();
         });
     };
 
@@ -808,6 +843,8 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, 
                 serieContentNum.style.height = '0';
 
                 $scope.$apply();
+
+                $Cache.refreshMenu();
 
                 AC.Tools.toast('Removido da lista.', AC.Models.toastTypes.SHORT_BOTTOM);
             });
@@ -832,15 +869,8 @@ app.controller('SerieCtrl', function ($scope, $rootScope, $acApi, $stateParams, 
             LIST_NAME: $scope.newListName,
             LIST_DTEDITION: moment().format()
         }, function () {
-            var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
-            sql += ' FROM AC_LIST l ';
-            sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
-            sql += ' GROUP BY LIST_ID';
-            sql += ' ORDER BY LIST_ID';
-
-            AC.Db.query(sql, function (res) {
+            $Cache.refreshMenu(function (res) {
                 $scope.lists = res;
-                $rootScope.menuLists = res;
 
                 if (!$rootScope.inList) {
                     $scope.addToList(res[res.length - 1]);
@@ -984,6 +1014,18 @@ app.controller('SerieAnimeCtrl', function ($scope, $rootScope, $acApi, $statePar
 
                         $scope.updateSeason = $scope.updateSeason;
                         $scope.updateEpisode = 0;
+
+                        $scope.$apply();
+                    });
+                } else {
+                    AC.Db.update('AC_SERIE', 'SERIE_EXT_ID = ' + $stateParams.id + ' AND SERIE_SEASON = ' + $scope.updateSeason, {
+                        SERIE_DTEDITION: moment().format()
+                    }, function() {
+                        $scope.currentSeason = res[0].SERIE_SEASON;
+                        $scope.currentEpisode = res[0].SERIE_NUM;
+
+                        $scope.updateSeason = res[0].SERIE_SEASON;
+                        $scope.updateEpisode = res[0].SERIE_NUM;
 
                         $scope.$apply();
                     });
@@ -1201,18 +1243,9 @@ app.controller('CategoryCtrl', function ($scope, $acApi, $stateParams) {
 	});
 });
 
-app.controller('MenuCtrl', function ($scope, $rootScope, $state) {
+app.controller('MenuCtrl', function ($scope, $rootScope, $state, $Cache) {
     document.addEventListener('dbReady', function () {
-        var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
-        sql += ' FROM AC_LIST l ';
-        sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
-        sql += ' GROUP BY LIST_ID';
-        sql += ' ORDER BY LIST_ID';
-
-        AC.Db.query(sql, function (res) {
-            $rootScope.menuLists = res;
-            $scope.$apply();
-        });
+        $Cache.refreshMenu();
     });
 
     $scope.openList = function (id) {
@@ -1224,7 +1257,7 @@ app.controller('MenuCtrl', function ($scope, $rootScope, $state) {
     };
 });
 
-app.controller('ListCtrl', function ($scope, $rootScope, $state, $stateParams) {
+app.controller('ListCtrl', function ($scope, $rootScope, $state, $stateParams, $Cache) {
     AC.loading.show();
 
     var sql = "SELECT *";
@@ -1261,15 +1294,7 @@ app.controller('ListCtrl', function ($scope, $rootScope, $state, $stateParams) {
 
         AC.Db.delete('AC_LIST', 'LIST_ID = ' + $stateParams.id, function () {
             AC.Db.delete('AC_SERIE_LIST', 'SL_LIST_ID = ' + $stateParams.id, function () {
-                var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
-                sql += ' FROM AC_LIST l ';
-                sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
-                sql += ' GROUP BY LIST_ID';
-                sql += ' ORDER BY LIST_ID';
-
-                AC.Db.query(sql, function (res) {
-                    $rootScope.menuLists = res;
-
+                $Cache.refreshMenu(function () {
                     AC.Tools.toast('Lista excluída com sucesso.', AC.Models.toastTypes.SHORT_BOTTOM);
                     AC.loading.hide();
                     $state.go('all-my');
@@ -1296,17 +1321,7 @@ app.controller('ListCtrl', function ($scope, $rootScope, $state, $stateParams) {
 
             $scope.listName = $scope.newName;
 
-
-            var sql = 'SELECT l.*, count(s.sl_serie_id) as "count"';
-            sql += ' FROM AC_LIST l ';
-            sql += ' LEFT JOIN AC_SERIE_LIST s ON s.SL_LIST_ID = l.LIST_ID';
-            sql += ' GROUP BY LIST_ID';
-            sql += ' ORDER BY LIST_ID';
-
-            AC.Db.query(sql, function (res) {
-                $rootScope.menuLists = res;
-                $scope.$apply();
-            });
+            $Cache.refreshMenu();
         });
     };
 });
@@ -1333,6 +1348,10 @@ app.controller('MySeriesCtrl', function ($scope, $rootScope, $state, $stateParam
         $rootScope.userInfos = res[0];
         $scope.$apply();
     });
+
+    document.addEventListener("backbutton", function() {
+        navigator.app.exitApp();
+    }, false);
 
     AC.initialize($scope, function () {
         AC.SlideTabs = TouchTabsLA({
@@ -1507,22 +1526,7 @@ app.controller('ListsCtrl', function ($scope) {
 });
 
 
-app.directive('btn', function () {
-    return {
-        restrict: 'C', //E = element, A = attribute, C = class, M = comment
-        link: function($scope, element, attrs) {
-            element.on('touchstart', function() {
-                this.className = this.className + ' -active';
-            });
-
-            element.on('touchend', function () {
-                this.className = this.className.replace(' -active');
-            });
-        }
-    }
-});
-
-app.directive('fab', function () {
+app.directive('-onhover', function () {
     return {
         restrict: 'C', //E = element, A = attribute, C = class, M = comment
         link: function ($scope, element, attrs) {
@@ -1544,12 +1548,14 @@ app.directive('ngPreload', function () {
             ngPreload: '='
         },
         link: function ($scope, element, attrs) {
-            var img = new Image();
-            img.onload = function (e) {
-                element[0].style.backgroundImage = 'url(' + this.src + ')';
+            if ($scope.ngPreload != undefined && $scope.ngPreload != '') {
+                var img = new Image();
+                img.onload = function (e) {
+                    element[0].style.backgroundImage = 'url(' + this.src + ')';
 
-            };
-            img.src = $scope.ngPreload;
+                };
+                img.src = $scope.ngPreload;
+            }
         }
     }
 });

@@ -9,7 +9,7 @@
             //this.dbEvent.initEvent('dbReady', true, true);
         };
 
-        constructor.prototype.onReady = function() {
+        constructor.prototype.onReady = function () {
             //dbEvent.initEvent('tabFocused', true, true);
             //tabContents[self.currentTab - 1].dispatchEvent(tabEvent);
         };
@@ -19,13 +19,15 @@
                 document.addEventListener('deviceready', function () {
                     self.db = window.sqlitePlugin.openDatabase({ name: "animecheck.db" });
 
-                    if ( typeof callback == 'function' ) {
+                    if (typeof callback == 'function') {
                         callback();
                     }
 
-                    self.createTables(function() {
-                        self.initializeData(function() {
-                            document.dispatchEvent(self.dbEvent);
+                    self.modifications(function () {
+                        self.createTables(function () {
+                            self.initializeData(function () {
+                                document.dispatchEvent(self.dbEvent);
+                            });
                         });
                     });
                 }, false);
@@ -36,15 +38,17 @@
                     callback();
                 }
 
-                self.createTables(function () {
-                    self.initializeData(function () {
-                        document.dispatchEvent(self.dbEvent);
+                self.modifications(function () {
+                    self.createTables(function () {
+                        self.initializeData(function () {
+                            document.dispatchEvent(self.dbEvent);
+                        });
                     });
                 });
             }
         };
 
-        constructor.prototype.resToArray = function(rows) {
+        constructor.prototype.resToArray = function (rows) {
             var newRows = [];
 
             for (var i = 0; i < rows.length; i++) {
@@ -68,8 +72,8 @@
             });
         };
 
-        constructor.prototype.debug = function(query) {
-            self.query(query, function(res) {
+        constructor.prototype.debug = function (query) {
+            self.query(query, function (res) {
                 console.log(res);
             });
         };
@@ -77,7 +81,7 @@
         constructor.prototype.executeBatch = function (list, callback) {
             var executed = 1;
             for (var i = 0; i < list.length; i++) {
-                self.query(list[i], function() {
+                self.query(list[i], function () {
                     executed++;
 
                     if (executed == list.length) {
@@ -102,11 +106,18 @@
             self.executeBatch(batchList);
         };
 
+        constructor.prototype.modifications = function (callback) {
+            //self.query('DROP TABLE AC_INFO', function () {
+            //    self.query('CREATE TABLE AC_INFO ( APP_VERSION text, APP_DT_INSTALL text, DEVICE_UUID text, DEVICE_MODEL text, DEVICE_PLATFORM text, DEVICE_VERSION real )', callback);
+            //});
+            callback();
+        };
+
         constructor.prototype.createTables = function (callback) {
             var batchList = [],
                 prefix = 'CREATE TABLE IF NOT EXISTS ';
 
-            batchList.push(prefix + 'AC_INFO ( APP_VERSION real, APP_DT_INSTALL text, DEVICE_UUID text, DEVICE_MODEL text, DEVICE_PLATFORM text, DEVICE_VERSION real )');
+            batchList.push(prefix + 'AC_INFO ( APP_VERSION text, APP_DT_INSTALL text, DEVICE_UUID text, DEVICE_MODEL text, DEVICE_PLATFORM text, DEVICE_VERSION text )');
             batchList.push(prefix + 'AC_USER ( USER_ID integer primary key autoincrement, USER_NAME text, USER_EMAIL text, USER_PASSWORD text, USER_PHOTO text, USER_DTEDITION text )');
             batchList.push(prefix + 'AC_SERIE_CACHE ( CACHE_ID integer, CACHE_TYPE text, CACHE_TITLE text, CACHE_TITLE_JP text, CACHE_IMG text, CACHE_SCORE real, CACHE_STATUS text, CACHE_DTEND text, CACHE_DTSTART text, CACHE_YOUTUBEID text, CACHE_GENRES text, CACHE_DURATION text, CACHE_EPISODES text, CACHE_CHAPTERS text, CACHE_VOLUMES text, CACHE_SYNONYMS text, CACHE_DTEDITION )');
             batchList.push(prefix + 'AC_SERIE ( SERIE_ID integer primary key autoincrement, SERIE_EXT_ID integer, SERIE_TYPE text, SERIE_SEASON integer, SERIE_NUM integer, SERIE_DTEDITION text )');
@@ -120,9 +131,9 @@
             var batchList = [],
                 prefix = 'INSERT INTO ';
 
-            self.query('SELECT COUNT(*) AS "count" FROM AC_INFO', function(res) {
+            self.query('SELECT COUNT(*) AS "count" FROM AC_INFO', function (res) {
                 if (res[0].count == 0) {
-                    batchList.push(prefix + "AC_INFO (APP_VERSION, APP_DT_INSTALL, DEVICE_UUID, DEVICE_MODEL, DEVICE_PLATFORM, DEVICE_VERSION) VALUES ('1.1', '" + moment().format() + "', '" + device.uuid + "', '" + device.model + "', '" + device.platform + "', " + device.version + ")");
+                    batchList.push(prefix + "AC_INFO (APP_VERSION, APP_DT_INSTALL, DEVICE_UUID, DEVICE_MODEL, DEVICE_PLATFORM, DEVICE_VERSION) VALUES ('0.1.5', '" + moment().format() + "', '" + device.uuid + "', '" + device.model + "', '" + device.platform + "', '" + device.version + "')");
 
                     batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Assistindo', '" + moment().format() + "')");
                     batchList.push(prefix + "AC_LIST (LIST_NAME, LIST_DTEDITION) VALUES ('Para Assistir', '" + moment().format() + "')");
@@ -138,6 +149,10 @@
                 } else {
                     if (typeof callback == 'function') {
                         callback();
+
+                        self.update('AC_INFO', '', {
+                            APP_VERSION: '0.1.5'
+                        });
                     }
                 }
             });
@@ -186,7 +201,11 @@
 
             fieldsValues = fieldsValues.substr(0, fieldsValues.length - 2);
 
-            sql += fieldsValues + ' WHERE ' + condition;
+            sql += fieldsValues;
+
+            if (condition != undefined && condition != '' && condition != null && condition != false) {
+                sql += ' WHERE ' + condition;
+            }
 
             return sql;
         };
@@ -206,7 +225,7 @@
         constructor.prototype.remove = function (table, condition, callback) {
             var sql = 'DELETE FROM ' + table;
 
-            if (condition != undefined && condition != '' && condition != null) {
+            if (condition != undefined && condition != '' && condition != null && condition != false) {
                 sql += ' WHERE ' + condition;
             }
 

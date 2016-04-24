@@ -64,7 +64,7 @@
         constructor.prototype.toInt = function (value) {
             value = parseInt(value);
 
-            if (value == 'NaN') {
+            if (value.toString() == 'NaN') {
                 value = 0;
             }
 

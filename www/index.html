@@ -7,10 +7,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
     <title>Anime Check</title>
     <script src="cordova.js"></script>
-    <link rel="stylesheet" href="src/style/css/main.css">
+    <link rel="stylesheet" href="src/style/css/main.min.css">
     <link rel="stylesheet" href="lib/touch-menu-la/css/touch-menu-la.min.css">
     <link rel="stylesheet" href="lib/touch-tabs-la/css/touch-tabs-la.min.css">
-    <link rel="stylesheet" href="lib/loading-spinner/loading-spinner.css">
+    <link rel="stylesheet" href="lib/loading-spinner/loading-spinner.min.css">
 </head>
 <body>
     <div id="view-index" ui-view>
@@ -45,13 +45,14 @@
             </ul>
         </div>
     </div>
-
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 200 200" id="spinner-content">
-        <circle cx="100" cy="100" r="50" id="circle"></circle>
+    
+    <div id="mask-spinner"></div>
+    <svg class="spinner" width="30px" height="30px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" id="spinner-content">
+        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
     </svg>
 
     <!-- Fastclick -->
-    <script src="lib/fastclick/fastclick.js"></script>
+    <script src="lib/fastclick/fastclick.min.js"></script>
 
     <!-- Angular -->
     <script src="lib/angular/angular.min.js"></script>
@@ -61,10 +62,10 @@
     <script src="lib/hammer/hammer.min.js"></script>
 
     <!-- Touch Menu Like Android -->
-    <script src="lib/touch-menu-la/js/touch-menu-la.js"></script>
+    <script src="lib/touch-menu-la/js/touch-menu-la.min.js"></script>
 
     <!-- Slide Tabs Like Android -->
-    <script src="lib/touch-tabs-la/js/touch-tabs-la.js"></script>
+    <script src="lib/touch-tabs-la/js/touch-tabs-la.min.js"></script>
 
     <script src="lib/moment/moment.min.js"></script>
 
@@ -79,11 +80,11 @@
     <script src="src/js/dataBase.js"></script>
 
     <!-- Loading Spinner -->
-    <script src="lib/loading-spinner/loading-spinner.js"></script>
+    <script src="lib/loading-spinner/loading-spinner.min.js"></script>
 
-    <script src="src/js/tools.js"></script>
+    <script src="src/js/tools.min.js"></script>
 
-    <script src="src/js/material-design.js"></script>
+    <script src="src/js/material-design.min.js"></script>
 
     <script src="src/js/main.js"></script>
 </body>
